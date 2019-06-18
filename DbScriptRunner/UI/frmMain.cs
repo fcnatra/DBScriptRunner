@@ -150,12 +150,18 @@ namespace DbScriptRunner.UI
 
         private void menuOpenServersConfiguration_Click(object sender, EventArgs e)
         {
-            var fullPath = CommonDialogs.SelectFileDialogBox();
+            var fullPath = CommonDialogs.SelectFileDialogBox("");
             if (!string.IsNullOrEmpty(fullPath))
             {
                 _appData.LoadDatabases(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
                 PopulateDatabasesListView(_appData.Databases, lvDatabases);
             }
+        }
+
+        private void menuSaveServersConfiguration_Click(object sender, EventArgs e)
+        {
+            var fullPath = CommonDialogs.SaveToFileDialogBox("");
+            //TODO: Save servers configuration
         }
     }
 }

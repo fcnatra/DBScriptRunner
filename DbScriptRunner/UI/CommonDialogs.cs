@@ -4,18 +4,27 @@ namespace DbScriptRunner.UI
 {
     public class CommonDialogs
     {
-        public static string SelectFileDialogBox()
+        public static string SelectFileDialogBox(string defaultFileName)
+        {
+            return ShowDialog(new OpenFileDialog() { FileName = defaultFileName });
+        }
+
+        public static string SaveToFileDialogBox(string defaultFileName)
+        {
+            return ShowDialog(new SaveFileDialog() { FileName = defaultFileName });
+        }
+
+        private static string ShowDialog(FileDialog fileDialog)
         {
             string fullPath = null;
-
-            var openFileDialog = new OpenFileDialog();
-            var dialogResult = openFileDialog.ShowDialog();
+            var dialogResult = fileDialog.ShowDialog();
             if (dialogResult == DialogResult.OK)
             {
-                fullPath = openFileDialog.FileName;
+                fullPath = fileDialog.FileName;
             }
             return fullPath;
         }
+
 
         public static void TellUserToSelectItemsInOrderToMove()
         {

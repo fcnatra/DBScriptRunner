@@ -38,8 +38,8 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serversToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openServersConfigurationToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveServersConfigurationToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuOpenServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.addServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editSelectedServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scriptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -138,8 +138,8 @@
             // serversToolStripMenuItem
             // 
             this.serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openServersConfigurationToolStripMenuItem1,
-            this.saveServersConfigurationToolStripMenuItem1,
+            this.menuOpenServersConfiguration,
+            this.menuSaveServersConfiguration,
             this.addServerToolStripMenuItem,
             this.editSelectedServerToolStripMenuItem});
             this.serversToolStripMenuItem.Name = "serversToolStripMenuItem";
@@ -148,16 +148,17 @@
             // 
             // openServersConfigurationToolStripMenuItem1
             // 
-            this.openServersConfigurationToolStripMenuItem1.Name = "openServersConfigurationToolStripMenuItem1";
-            this.openServersConfigurationToolStripMenuItem1.Size = new System.Drawing.Size(231, 22);
-            this.openServersConfigurationToolStripMenuItem1.Text = "&Open Database Configuration";
-            this.openServersConfigurationToolStripMenuItem1.Click += new System.EventHandler(this.menuOpenServersConfiguration_Click);
+            this.menuOpenServersConfiguration.Name = "openServersConfigurationToolStripMenuItem1";
+            this.menuOpenServersConfiguration.Size = new System.Drawing.Size(231, 22);
+            this.menuOpenServersConfiguration.Text = "&Open Database Configuration";
+            this.menuOpenServersConfiguration.Click += new System.EventHandler(this.menuOpenServersConfiguration_Click);
             // 
             // saveServersConfigurationToolStripMenuItem1
             // 
-            this.saveServersConfigurationToolStripMenuItem1.Name = "saveServersConfigurationToolStripMenuItem1";
-            this.saveServersConfigurationToolStripMenuItem1.Size = new System.Drawing.Size(231, 22);
-            this.saveServersConfigurationToolStripMenuItem1.Text = "&Save Database Configuration";
+            this.menuSaveServersConfiguration.Name = "saveServersConfigurationToolStripMenuItem1";
+            this.menuSaveServersConfiguration.Size = new System.Drawing.Size(231, 22);
+            this.menuSaveServersConfiguration.Text = "&Save Database Configuration";
+            this.menuSaveServersConfiguration.Click += new System.EventHandler(this.menuSaveServersConfiguration_Click);
             // 
             // addServerToolStripMenuItem
             // 
@@ -222,7 +223,7 @@
             // 
             // lvDatabases
             // 
-            this.lvDatabases.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lvDatabases.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.lvDatabases.FullRowSelect = true;
             this.lvDatabases.HideSelection = false;
@@ -319,8 +320,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem serversToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openServersConfigurationToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem saveServersConfigurationToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem menuOpenServersConfiguration;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveServersConfiguration;
         private System.Windows.Forms.ToolStripMenuItem addServerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editSelectedServerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scriptsToolStripMenuItem;
