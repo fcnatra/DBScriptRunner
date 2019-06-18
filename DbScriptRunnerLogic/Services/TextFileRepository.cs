@@ -1,5 +1,6 @@
 ﻿using DbScriptRunnerLogic.Interfaces;
 using System.IO;
+using System.Text;
 
 namespace DbScriptRunnerLogic.Services
 {
@@ -15,6 +16,18 @@ namespace DbScriptRunnerLogic.Services
             var streamReader = new System.IO.StreamReader(FullRepositoryName);
             var data = streamReader.ReadToEnd();
             streamReader.Close();
+            return data;
+        }
+
+        public string Load(Stream fileStream)
+        {
+            int bufferSize = 1024 * 1000;
+            var buffer = new byte[bufferSize];
+
+            int bytesRead = fileStream.Read(buffer, 0, bufferSize);
+            fileStream.Close();
+
+            var data = Encoding.Default.GetString(buffer); ;
             return data;
         }
 

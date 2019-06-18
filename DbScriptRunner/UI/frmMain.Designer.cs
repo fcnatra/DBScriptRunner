@@ -1,4 +1,4 @@
-﻿namespace DbScriptRunner
+﻿namespace DbScriptRunner.UI
 {
     partial class frmMain
     {
@@ -65,7 +65,7 @@
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(613, 2);
+            this.btnClose.Location = new System.Drawing.Point(819, 2);
             this.btnClose.Margin = new System.Windows.Forms.Padding(2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(56, 19);
@@ -78,10 +78,10 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 454);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 354);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(671, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(877, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -95,10 +95,10 @@
             // 
             this.panel1.Controls.Add(this.btnClose);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 431);
+            this.panel1.Location = new System.Drawing.Point(0, 331);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(671, 23);
+            this.panel1.Size = new System.Drawing.Size(877, 23);
             this.panel1.TabIndex = 3;
             // 
             // menuStrip2
@@ -110,7 +110,7 @@
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
             this.menuStrip2.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip2.Size = new System.Drawing.Size(671, 24);
+            this.menuStrip2.Size = new System.Drawing.Size(877, 24);
             this.menuStrip2.TabIndex = 5;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -151,6 +151,7 @@
             this.openServersConfigurationToolStripMenuItem1.Name = "openServersConfigurationToolStripMenuItem1";
             this.openServersConfigurationToolStripMenuItem1.Size = new System.Drawing.Size(231, 22);
             this.openServersConfigurationToolStripMenuItem1.Text = "&Open Database Configuration";
+            this.openServersConfigurationToolStripMenuItem1.Click += new System.EventHandler(this.menuOpenServersConfiguration_Click);
             // 
             // saveServersConfigurationToolStripMenuItem1
             // 
@@ -221,11 +222,13 @@
             // 
             // lvDatabases
             // 
+            this.lvDatabases.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.lvDatabases.FullRowSelect = true;
             this.lvDatabases.HideSelection = false;
-            this.lvDatabases.Location = new System.Drawing.Point(0, 52);
+            this.lvDatabases.Location = new System.Drawing.Point(12, 52);
             this.lvDatabases.Name = "lvDatabases";
-            this.lvDatabases.Size = new System.Drawing.Size(271, 374);
+            this.lvDatabases.Size = new System.Drawing.Size(253, 274);
             this.lvDatabases.TabIndex = 6;
             this.lvDatabases.UseCompatibleStateImageBehavior = false;
             // 
@@ -239,7 +242,7 @@
             this.toolStripButtonRemove});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(671, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(877, 25);
             this.toolStrip1.TabIndex = 7;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -251,7 +254,7 @@
             this.toolStripButtonMoveUp.Size = new System.Drawing.Size(73, 22);
             this.toolStripButtonMoveUp.Text = "Move Up";
             this.toolStripButtonMoveUp.ToolTipText = "Move Up";
-            this.toolStripButtonMoveUp.Click += new System.EventHandler(this.toolStripButtonMoveUp_Click);
+            this.toolStripButtonMoveUp.Click += new System.EventHandler(this.toolbarMoveUp_Click);
             // 
             // toolStripButtonMoveDown
             // 
@@ -283,9 +286,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(671, 476);
-            this.Controls.Add(this.toolStrip1);
+            this.ClientSize = new System.Drawing.Size(877, 376);
             this.Controls.Add(this.lvDatabases);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip2);
