@@ -45,6 +45,7 @@
     <Compile Include="Entities\Database.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IRepositoryInformation.cs" />
     <Compile Include="Interfaces\IStateFull.cs" />
     <Compile Include="Interfaces\ITargetOfOperations.cs" />
     <Compile Include="Enums.cs" />

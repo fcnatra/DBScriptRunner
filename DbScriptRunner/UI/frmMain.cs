@@ -86,7 +86,18 @@ namespace DbScriptRunner.UI
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _appData.BackupCurrentStatus();
+            DialogResult dialogResult = DialogResult.OK;
+            if (_appData.DatabasesHaveChanged())
+            {
+                dialogResult = MessageBox.Show("Databases changed. Want to save the current list?", "CONTENT HAVE CHANGED", MessageBoxButtons.YesNoCancel);
+                if (dialogResult == DialogResult.Yes)
+                    SaveDatabases();
+            }
+
+            if (dialogResult == DialogResult.Cancel)
+                e.Cancel = true;
+            else
+                _appData.BackupCurrentStatus();
         }
 
         private void toolbarMoveUp_Click(object sender, EventArgs e)
@@ -150,7 +161,9 @@ namespace DbScriptRunner.UI
 
         private void menuOpenServersConfiguration_Click(object sender, EventArgs e)
         {
-            var fullPath = CommonDialogs.SelectFileDialogBox("");
+            var destinationInfo = _appData.DatabaseRepositoryInformation;
+
+            var fullPath = CommonDialogs.SelectFileDialogBox("", destinationInfo.Location);
             if (!string.IsNullOrEmpty(fullPath))
             {
                 _appData.LoadDatabases(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
@@ -160,12 +173,18 @@ namespace DbScriptRunner.UI
 
         private void menuSaveServersConfiguration_Click(object sender, EventArgs e)
         {
-            var fullPath = CommonDialogs.SaveToFileDialogBox("");
+            SaveDatabases();
+        }
+
+        private void SaveDatabases()
+        {
+            var destinationInfo = _appData.DatabaseRepositoryInformation;
+
+            var fullPath = CommonDialogs.SaveToFileDialogBox(destinationInfo.Name, destinationInfo.Location);
             if (!string.IsNullOrEmpty(fullPath))
             {
                 _appData.SaveDatabases(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
             }
-
         }
     }
 }

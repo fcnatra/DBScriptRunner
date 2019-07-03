@@ -17,6 +17,8 @@ namespace DbScriptRunner.Services
 
         public DatabasePersistence DatabasePersistence { get; set; }
 
+        public IRepositoryInformation DatabaseRepositoryInformation => DatabasePersistence?.Repository;
+
         public void RecoverLastStatus()
         {
             try
@@ -60,6 +62,11 @@ namespace DbScriptRunner.Services
             StatusBackup.BackupContent.Add(DatabasePersistence.Repository.Name);
             StatusBackup.BackupContent.Add(DatabasePersistence.Repository.Location);
             StatusBackup.SaveStatus();
+        }
+
+        internal bool DatabasesHaveChanged()
+        {
+            return Databases.GetHasChanged();
         }
     }
 }

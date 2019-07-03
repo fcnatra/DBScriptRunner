@@ -4,20 +4,25 @@ namespace DbScriptRunner.UI
 {
     public class CommonDialogs
     {
-        public static string SelectFileDialogBox(string defaultFileName)
+        public static string SelectFileDialogBox(string defaultFileName, string initialDirectory = "")
         {
-            return ShowDialog(new OpenFileDialog() { FileName = defaultFileName });
+            return ShowDialog(new OpenFileDialog(), defaultFileName, initialDirectory);
         }
 
-        public static string SaveToFileDialogBox(string defaultFileName)
+        public static string SaveToFileDialogBox(string defaultFileName, string initialDirectory = "")
         {
-            return ShowDialog(new SaveFileDialog() { FileName = defaultFileName });
+            return ShowDialog(new SaveFileDialog(), defaultFileName, initialDirectory);
         }
 
-        private static string ShowDialog(FileDialog fileDialog)
+        private static string ShowDialog(FileDialog fileDialog, string defaultFileName, string initialDirectory)
         {
             string fullPath = null;
+
+            fileDialog.FileName = defaultFileName;
+            fileDialog.InitialDirectory = initialDirectory;
+
             var dialogResult = fileDialog.ShowDialog();
+
             if (dialogResult == DialogResult.OK)
             {
                 fullPath = fileDialog.FileName;

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DbScriptRunner.Services
 {
@@ -25,7 +22,7 @@ namespace DbScriptRunner.Services
             if (!_stateHolder.ContainsKey(list.GetHashCode()))
                 SetHasChanged(list, false);
 
-            return _stateHolder.ContainsKey(list.GetHashCode());
+            return _stateHolder[list.GetHashCode()];
         }
 
         public static void SetHasChanged<T>(this List<T> list, bool changed)
