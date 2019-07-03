@@ -91,7 +91,7 @@ namespace DbScriptRunner.UI
 
         private void toolbarMoveUp_Click(object sender, EventArgs e)
         {
-            if (AreThereDatabasesSelected())
+            if (IsThereAnyDatabaseSelected())
             {
                 CommonDialogs.TellUserToSelectItemsInOrderToMove();
                 return;
@@ -143,7 +143,7 @@ namespace DbScriptRunner.UI
             return canMoveUp;
         }
 
-        private bool AreThereDatabasesSelected()
+        private bool IsThereAnyDatabaseSelected()
         {
             return lvDatabases.SelectedItems.Count <= 0;
         }
@@ -161,7 +161,11 @@ namespace DbScriptRunner.UI
         private void menuSaveServersConfiguration_Click(object sender, EventArgs e)
         {
             var fullPath = CommonDialogs.SaveToFileDialogBox("");
-            //TODO: Save servers configuration
+            if (!string.IsNullOrEmpty(fullPath))
+            {
+                _appData.SaveDatabases(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
+            }
+
         }
     }
 }

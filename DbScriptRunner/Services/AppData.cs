@@ -40,11 +40,19 @@ namespace DbScriptRunner.Services
             }
         }
 
-        public void LoadDatabases(string databaseName, string databaseLocation)
+        public void LoadDatabases(string locationName, string locationPath)
         {
-            DatabasePersistence.Repository.Name = databaseName;
-            DatabasePersistence.Repository.Location = databaseLocation;
+            DatabasePersistence.Repository.Name = locationName;
+            DatabasePersistence.Repository.Location = locationPath;
             Databases = DatabasePersistence.Load();
+        }
+
+        public void SaveDatabases(string locationName, string locationPath)
+        {
+            DatabasePersistence.Repository.Name = locationName;
+            DatabasePersistence.Repository.Location = locationPath;
+            DatabasePersistence.Items = Databases;
+            DatabasePersistence.Save();
         }
 
         public void BackupCurrentStatus()

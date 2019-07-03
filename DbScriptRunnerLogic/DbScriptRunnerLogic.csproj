@@ -45,7 +45,8 @@
     <Compile Include="Entities\Database.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
-    <Compile Include="Interfaces\IRunnerTarget.cs" />
+    <Compile Include="Interfaces\IStateFull.cs" />
+    <Compile Include="Interfaces\ITargetOfOperations.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\TextFileRepository.cs" />

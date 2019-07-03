@@ -1,7 +1,7 @@
 ﻿
 namespace DbScriptRunnerLogic.Interfaces
 {
-    public interface IRunnerTarget
+    public interface ITargetOfOperations
     {
         Enums.OperationResult OperationResult { get; set; }
     }

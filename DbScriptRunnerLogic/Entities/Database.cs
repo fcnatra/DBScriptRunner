@@ -4,7 +4,7 @@ using System;
 namespace DbScriptRunnerLogic.Entities
 {
     [Serializable()]
-    public class Database : INamed, IRunnerTarget
+    public class Database : INamed, ITargetOfOperations
     {
         public string Name { get; set; }
 
