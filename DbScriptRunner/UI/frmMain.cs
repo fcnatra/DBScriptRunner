@@ -53,7 +53,7 @@ namespace DbScriptRunner.UI
 
             if (dataSource != null && dataSource.Any())
             {
-                for (int i = 0; i < _appData.Databases.Count - 1; i++)
+                for (int i = 0; i < _appData.Databases.Count; i++)
                 {
                     var lvItem = lvDatabases.Items.Add(i.ToString());
                     lvItem.Tag = _appData.Databases[i];
@@ -138,10 +138,12 @@ namespace DbScriptRunner.UI
         private List<int> RemoveItemsfromListView(List<INamed> relatedDataSource, ListView listView)
         {
             var selectedItems = listView.SelectedItems;
+            var maxLvItemIndex = listView.Items.Count - 1;
+
             var itemIndex = selectedItems[0].Index;
             var indicesToSelect = new List<int>();
             if (itemIndex == relatedDataSource.Count-1)
-                indicesToSelect = new List<int>() { relatedDataSource.Count - 1 };
+                indicesToSelect = new List<int>() { maxLvItemIndex - (maxLvItemIndex > 0 ? 1 : 0) };
             else
                 indicesToSelect = new List<int>() { selectedItems[0].Index };
 
