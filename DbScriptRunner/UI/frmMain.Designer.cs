@@ -265,7 +265,7 @@
             this.toolStripButtonMoveDown.Size = new System.Drawing.Size(89, 22);
             this.toolStripButtonMoveDown.Text = "Move Down";
             this.toolStripButtonMoveDown.ToolTipText = "Move Down";
-            this.toolStripButtonMoveDown.Click += new System.EventHandler(this.toolStripButtonMoveDown_Click);
+            this.toolStripButtonMoveDown.Click += new System.EventHandler(this.toolbarMoveDown_Click);
             // 
             // toolStripButtonAdd
             // 
@@ -282,6 +282,7 @@
             this.toolStripButtonRemove.Name = "toolStripButtonRemove";
             this.toolStripButtonRemove.Size = new System.Drawing.Size(67, 22);
             this.toolStripButtonRemove.Text = "Remove";
+            this.toolStripButtonRemove.Click += new System.EventHandler(this.toolbarRemove_Click);
             // 
             // frmMain
             // 

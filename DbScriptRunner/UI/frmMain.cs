@@ -112,7 +112,7 @@ namespace DbScriptRunner.UI
             PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
         }
 
-        private void toolStripButtonMoveDown_Click(object sender, EventArgs e)
+        private void toolbarMoveDown_Click(object sender, EventArgs e)
         {
             if (!IsThereAnyItemSelected(lvDatabases))
             {
@@ -122,6 +122,34 @@ namespace DbScriptRunner.UI
 
             var indicesToSelect = MoveDownSelectedItemsOnePosition(_appData.Databases, lvDatabases);
             PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
+        }
+
+        private void toolbarRemove_Click(object sender, EventArgs e)
+        {
+            if (!IsThereAnyItemSelected(lvDatabases))
+            {
+                CommonDialogs.TellUserToSelectItemsInOrderToMove();
+                return;
+            }
+            var indicesToSelect = RemoveItemsfromListView(_appData.Databases, lvDatabases);
+            PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
+        }
+
+        private List<int> RemoveItemsfromListView(List<INamed> relatedDataSource, ListView listView)
+        {
+            var selectedItems = listView.SelectedItems;
+            var itemIndex = selectedItems[0].Index;
+            var indicesToSelect = new List<int>();
+            if (itemIndex == relatedDataSource.Count-1)
+                indicesToSelect = new List<int>() { relatedDataSource.Count - 1 };
+            else
+                indicesToSelect = new List<int>() { selectedItems[0].Index };
+
+
+            foreach (ListViewItem lvItem in selectedItems)
+                relatedDataSource.RemoveAt(lvItem.Index);
+
+            return indicesToSelect;
         }
 
         private List<int> MoveDownSelectedItemsOnePosition(List<INamed> relatedDataSource, ListView listView)
