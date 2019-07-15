@@ -13,6 +13,7 @@ namespace DbScriptRunner.UI
     public partial class frmMain : Form
     {
         private AppData _appData;
+        
 
         public frmMain()
         {
@@ -30,8 +31,7 @@ namespace DbScriptRunner.UI
             var fileRepository = new TextFileRepository();
             _appData = new AppData
             {
-                StatusBackup = new ApplicationStatusBackup(),
-                DatabasePersistence = new DatabasePersistence() { Repository = fileRepository },
+                DataPersistence = new DataPersistence() { Repository = fileRepository },
             };
         }
 
@@ -102,7 +102,7 @@ namespace DbScriptRunner.UI
 
         private void toolbarMoveUp_Click(object sender, EventArgs e)
         {
-            if (IsThereAnyDatabaseSelected())
+            if (!IsThereAnyItemSelected(lvDatabases))
             {
                 CommonDialogs.TellUserToSelectItemsInOrderToMove();
                 return;
@@ -110,6 +110,36 @@ namespace DbScriptRunner.UI
 
             var indicesToSelect = MoveUpSelectedItemsOnePosition(_appData.Databases, lvDatabases);
             PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
+        }
+
+        private void toolStripButtonMoveDown_Click(object sender, EventArgs e)
+        {
+            if (!IsThereAnyItemSelected(lvDatabases))
+            {
+                CommonDialogs.TellUserToSelectItemsInOrderToMove();
+                return;
+            }
+
+            var indicesToSelect = MoveDownSelectedItemsOnePosition(_appData.Databases, lvDatabases);
+            PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
+        }
+
+        private List<int> MoveDownSelectedItemsOnePosition(List<INamed> relatedDataSource, ListView listView)
+        {
+            var selectedItems = listView.SelectedItems;
+            var movedIndices = new List<int>();
+            for (var selectedItemIndex = selectedItems.Count-1; selectedItemIndex >= 0; selectedItemIndex--)
+            {
+                var lvItem = selectedItems[selectedItemIndex];
+                if (CanMoveDownOnListView(relatedDataSource, lvItem))
+                {
+                    relatedDataSource.MoveDownItemOnePosition(lvItem.Index);
+                    movedIndices.Add(lvItem.Index + 1);
+                }
+                else
+                    movedIndices.Add(lvItem.Index);
+            }
+            return movedIndices;
         }
 
         private List<int> MoveUpSelectedItemsOnePosition(List<INamed> relatedDataSource, ListView listView)
@@ -128,6 +158,31 @@ namespace DbScriptRunner.UI
                     movedIndices.Add(lvItemIndex);
             }
             return movedIndices;
+        }
+
+        private bool CanMoveDownOnListView(List<INamed> relatedDataSource, ListViewItem lvItem)
+        {
+            var selectedItems = lvItem.ListView.SelectedItems;
+            var lvIndex = lvItem.Index;
+            int selectedItemIndex = selectedItems.IndexOf(lvItem);
+            var maxSelectedItemsIndex = selectedItems.Count - 1;
+            var maxLvIndex = lvItem.ListView.Items.Count - 1;
+
+            bool canMoveDown = (
+                selectedItems.Count > 1 &&
+                selectedItemIndex < maxSelectedItemsIndex &&
+                relatedDataSource[lvIndex + 1] != selectedItems[selectedItemIndex + 1].Tag
+                );
+
+            canMoveDown = canMoveDown ||
+                (
+                lvIndex < maxLvIndex &&
+                (selectedItems.Count == 1 ||
+                (selectedItems.Count > 1 &&
+                ((selectedItemIndex < maxSelectedItemsIndex && relatedDataSource[lvIndex + 1] != selectedItems[selectedItemIndex + 1].Tag) || selectedItemIndex == maxSelectedItemsIndex)
+                )));
+
+            return canMoveDown;
         }
 
         private bool CanMoveUpOnListView(List<INamed> relatedDataSource, ListViewItem lvItem)
@@ -154,9 +209,9 @@ namespace DbScriptRunner.UI
             return canMoveUp;
         }
 
-        private bool IsThereAnyDatabaseSelected()
+        private bool IsThereAnyItemSelected(ListView listView)
         {
-            return lvDatabases.SelectedItems.Count <= 0;
+            return listView.SelectedItems.Count > 0;
         }
 
         private void menuOpenServersConfiguration_Click(object sender, EventArgs e)

@@ -11,13 +11,18 @@ namespace DbScriptRunner.Services
 {
     public class AppData
     {
+        public AppData()
+        {
+            StatusBackup = new ApplicationStatusBackup();
+        }
+
         public ApplicationStatusBackup StatusBackup { get; set; }
 
         public List<INamed> Databases { get; set; }
 
-        public DatabasePersistence DatabasePersistence { get; set; }
+        public DataPersistence DataPersistence { get; set; }
 
-        public IRepositoryInformation DatabaseRepositoryInformation => DatabasePersistence?.Repository;
+        public IRepositoryInformation DatabaseRepositoryInformation => DataPersistence?.Repository;
 
         public void RecoverLastStatus()
         {
@@ -44,23 +49,23 @@ namespace DbScriptRunner.Services
 
         public void LoadDatabases(string locationName, string locationPath)
         {
-            DatabasePersistence.Repository.Name = locationName;
-            DatabasePersistence.Repository.Location = locationPath;
-            Databases = DatabasePersistence.Load();
+            DataPersistence.Repository.Name = locationName;
+            DataPersistence.Repository.Location = locationPath;
+            Databases = DataPersistence.Load();
         }
 
         public void SaveDatabases(string locationName, string locationPath)
         {
-            DatabasePersistence.Repository.Name = locationName;
-            DatabasePersistence.Repository.Location = locationPath;
-            DatabasePersistence.Items = Databases;
-            DatabasePersistence.Save();
+            DataPersistence.Repository.Name = locationName;
+            DataPersistence.Repository.Location = locationPath;
+            DataPersistence.Items = Databases;
+            DataPersistence.Save();
         }
 
         public void BackupCurrentStatus()
         {
-            StatusBackup.BackupContent.Add(DatabasePersistence.Repository.Name);
-            StatusBackup.BackupContent.Add(DatabasePersistence.Repository.Location);
+            StatusBackup.BackupContent.Add(DataPersistence.Repository.Name);
+            StatusBackup.BackupContent.Add(DataPersistence.Repository.Location);
             StatusBackup.SaveStatus();
         }
 

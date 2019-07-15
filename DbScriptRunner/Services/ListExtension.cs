@@ -17,6 +17,17 @@ namespace DbScriptRunner.Services
             SetHasChanged(list, true);
         }
 
+        public static void MoveDownItemOnePosition<T>(this List<T> list, int indexToMove)
+        {
+            var maxIndex = list.Count()-1;
+            if (indexToMove == maxIndex) return;
+
+            var item = list[indexToMove];
+            list.RemoveAt(indexToMove);
+            list.Insert(indexToMove + 1, item);
+            SetHasChanged(list, true);
+        }
+
         public static bool GetHasChanged<T>(this List<T> list)
         {
             if (!_stateHolder.ContainsKey(list.GetHashCode()))

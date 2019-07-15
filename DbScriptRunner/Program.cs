@@ -13,7 +13,10 @@ namespace DbScriptRunner
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new UI.frmMain());
+
+            var mainForm = new UI.frmMain();
+
+            Application.Run(mainForm);
         }
     }
 }

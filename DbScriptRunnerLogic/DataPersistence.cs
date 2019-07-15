@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DbScriptRunnerLogic
 {
-    public class DatabasePersistence
+    public class DataPersistence
     {
         public IRepository Repository { get; set; }
 

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbScriptRunner", "DbScriptR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbScriptRunnerLogic", "DbScriptRunnerLogic\DbScriptRunnerLogic.csproj", "{19BFE1AE-A3AF-4A31-9836-0592D7592D1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbScriptRunnerTests", "DbScriptRunnerTests\DbScriptRunnerTests.csproj", "{59A4BFE6-1A28-4D63-8800-FA37375245D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{19BFE1AE-A3AF-4A31-9836-0592D7592D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19BFE1AE-A3AF-4A31-9836-0592D7592D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19BFE1AE-A3AF-4A31-9836-0592D7592D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59A4BFE6-1A28-4D63-8800-FA37375245D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59A4BFE6-1A28-4D63-8800-FA37375245D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59A4BFE6-1A28-4D63-8800-FA37375245D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59A4BFE6-1A28-4D63-8800-FA37375245D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
