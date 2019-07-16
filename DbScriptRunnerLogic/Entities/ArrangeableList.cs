@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DbScriptRunnerLogic.Entities
@@ -15,7 +16,28 @@ namespace DbScriptRunnerLogic.Entities
             {
                 int index = indicesToMove[i];
 
-                if (CanMoveUpOnList(index, indicesToMove))
+                if (CanMoveUp(index, indicesToMove))
+                {
+                    MoveItemUpOnePosition(index);
+                    movedIndices.Add(index - 1);
+                    indicesToMove[i] = index - 1;
+                }
+                else
+                    movedIndices.Add(index);
+            }
+
+            return movedIndices;
+        }
+
+        public List<int> MoveItemsDownOnePosition(List<int> indicesToMove)
+        {
+            var movedIndices = new List<int>();
+
+            for (int i = 0; i < indicesToMove.Count; i++)
+            {
+                int index = indicesToMove[i];
+
+                if (CanMoveDown(index, indicesToMove))
                 {
                     MoveItemUpOnePosition(index);
                     movedIndices.Add(index - 1);
@@ -54,12 +76,12 @@ namespace DbScriptRunnerLogic.Entities
             return !this.Any();
         }
 
-        private bool CanMoveUpOnList(int itemIndex, List<int> indicesToMove)
+        private bool CanMoveUp(int itemIndex, List<int> indicesToMove)
         {
             bool canMoveUp = (
                 MovingMoreThanOne(indicesToMove)
                 && !IsTheFirst(itemIndex)
-                && !AboveInTheListIsAlsoSelected(itemIndex, indicesToMove)
+                && !ItemAboveInTheListIsAlsoSelected(itemIndex, indicesToMove)
                 );
 
             canMoveUp = canMoveUp
@@ -68,10 +90,29 @@ namespace DbScriptRunnerLogic.Entities
                 &&
                 (MovingOnlyOne(indicesToMove)
                 ||
-                (MovingMoreThanOne(indicesToMove) && (IsTheFirst(itemIndex) || (!IsTheFirst(itemIndex) && !AboveInTheListIsAlsoSelected(itemIndex, indicesToMove)))))
+                (MovingMoreThanOne(indicesToMove) && (IsTheFirst(itemIndex) || (!IsTheFirst(itemIndex) && !ItemAboveInTheListIsAlsoSelected(itemIndex, indicesToMove)))))
                 );
 
             return canMoveUp;
+        }
+
+        private bool CanMoveDown(int itemIndex, List<int> indicesToMove)
+        {
+            bool canMoveDown = (
+                MovingMoreThanOne(indicesToMove)
+                && !IsTheLast(itemIndex, indicesToMove)
+                && ItemBelowInTheListIsAlsoSelected(itemIndex, indicesToMove)
+                );
+
+            //canMoveDown = canMoveDown ||
+            //    (
+            //    lvIndex < maxLvIndex &&
+            //    (selectedItems.Count == 1 ||
+            //    (selectedItems.Count > 1 &&
+            //    ((selectedItemIndex < maxSelectedItemsIndex && relatedDataSource.ElementAt(lvIndex + 1) != selectedItems[selectedItemIndex + 1].Tag) || selectedItemIndex == maxSelectedItemsIndex)
+            //    )));
+
+            return canMoveDown;
         }
 
         private bool MovingOnlyOne(List<int> indicesToMove) => indicesToMove.Count == 1;
@@ -80,6 +121,10 @@ namespace DbScriptRunnerLogic.Entities
 
         private bool IsTheFirst(int itemIndex) => itemIndex == 0;
 
-        private bool AboveInTheListIsAlsoSelected(int itemIndex, List<int> indicesToMove) => indicesToMove.Contains(itemIndex - 1);
+        private bool IsTheLast(int index, List<int> indices) => index < (indices.Count - 1);
+
+        private bool ItemAboveInTheListIsAlsoSelected(int itemIndex, List<int> indicesToMove) => indicesToMove.Contains(itemIndex - 1);
+
+        private bool ItemBelowInTheListIsAlsoSelected(int itemIndex, List<int> indicesToMove) => indicesToMove.Contains(itemIndex + 1);
     }
 }
