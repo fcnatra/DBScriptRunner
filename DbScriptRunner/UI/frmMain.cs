@@ -1,5 +1,6 @@
 ﻿using DbScriptRunner.Services;
 using DbScriptRunnerLogic;
+using DbScriptRunnerLogic.Entities;
 using DbScriptRunnerLogic.Interfaces;
 using DbScriptRunnerLogic.Services;
 using System;
@@ -45,7 +46,7 @@ namespace DbScriptRunner.UI
             PopulateDatabasesListView(_appData.Databases, lvDatabases);
         }
 
-        private void PopulateDatabasesListView(List<INamed> dataSource, ListView listViewm, List<int> indicesToSelect = null)
+        private void PopulateDatabasesListView(IEnumerable<INamed> dataSource, ListView listViewm, List<int> indicesToSelect = null)
         {
             lvDatabases.SuspendLayout();
 
@@ -53,11 +54,11 @@ namespace DbScriptRunner.UI
 
             if (dataSource != null && dataSource.Any())
             {
-                for (int i = 0; i < _appData.Databases.Count; i++)
+                for (int i = 0; i < _appData.Databases.Count(); i++)
                 {
                     var lvItem = lvDatabases.Items.Add(i.ToString());
-                    lvItem.Tag = _appData.Databases[i];
-                    lvItem.SubItems.Add(_appData.Databases[i].Name);
+                    lvItem.Tag = _appData.Databases.ElementAt(i);
+                    lvItem.SubItems.Add(_appData.Databases.ElementAt(i).Name);
                 }
                 SelectIndicesOnListView(lvDatabases, indicesToSelect);
             }
@@ -108,7 +109,7 @@ namespace DbScriptRunner.UI
                 return;
             }
 
-            var indicesToSelect = MoveUpSelectedItemsOnePosition(_appData.Databases, lvDatabases);
+            var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).MoveItemsUpOnePosition(lvDatabases.SelectedIndices.Cast<int>().ToList()); //MoveUpSelectedItemsOnePosition(_appData.Databases, lvDatabases);
             PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
         }
 
@@ -135,26 +136,26 @@ namespace DbScriptRunner.UI
             PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
         }
 
-        private List<int> RemoveItemsfromListView(List<INamed> relatedDataSource, ListView listView)
+        private List<int> RemoveItemsfromListView(IEnumerable<INamed> relatedDataSource, ListView listView)
         {
             var selectedItems = listView.SelectedItems;
             var maxLvItemIndex = listView.Items.Count - 1;
 
             var itemIndex = selectedItems[0].Index;
             var indicesToSelect = new List<int>();
-            if (itemIndex == relatedDataSource.Count-1)
+            if (itemIndex == relatedDataSource.Count()-1)
                 indicesToSelect = new List<int>() { maxLvItemIndex - (maxLvItemIndex > 0 ? 1 : 0) };
             else
                 indicesToSelect = new List<int>() { selectedItems[0].Index };
 
 
             foreach (ListViewItem lvItem in selectedItems)
-                relatedDataSource.RemoveAt(lvItem.Index);
+                ((List<INamed>)relatedDataSource).RemoveAt(lvItem.Index);
 
             return indicesToSelect;
         }
 
-        private List<int> MoveDownSelectedItemsOnePosition(List<INamed> relatedDataSource, ListView listView)
+        private List<int> MoveDownSelectedItemsOnePosition(IEnumerable<INamed> relatedDataSource, ListView listView)
         {
             var selectedItems = listView.SelectedItems;
             var movedIndices = new List<int>();
@@ -163,7 +164,7 @@ namespace DbScriptRunner.UI
                 var lvItem = selectedItems[selectedItemIndex];
                 if (CanMoveDownOnListView(relatedDataSource, lvItem))
                 {
-                    relatedDataSource.MoveDownItemOnePosition(lvItem.Index);
+                    ((List<INamed>)relatedDataSource).MoveDownItemOnePosition(lvItem.Index);
                     movedIndices.Add(lvItem.Index + 1);
                 }
                 else
@@ -172,7 +173,7 @@ namespace DbScriptRunner.UI
             return movedIndices;
         }
 
-        private List<int> MoveUpSelectedItemsOnePosition(List<INamed> relatedDataSource, ListView listView)
+        private List<int> MoveUpSelectedItemsOnePosition(IEnumerable<INamed> relatedDataSource, ListView listView)
         {
             var selectedItems = listView.SelectedItems;
             var movedIndices = new List<int>();
@@ -181,7 +182,7 @@ namespace DbScriptRunner.UI
                 var lvItemIndex = lvItem.Index;
                 if (CanMoveUpOnListView(relatedDataSource, lvItem))
                 {
-                    relatedDataSource.MoveUpItemOnePosition(lvItemIndex);
+                    ((List<INamed>)relatedDataSource).MoveUpItemOnePosition(lvItemIndex);
                     movedIndices.Add(lvItemIndex - 1);
                 }
                 else
@@ -190,7 +191,7 @@ namespace DbScriptRunner.UI
             return movedIndices;
         }
 
-        private bool CanMoveDownOnListView(List<INamed> relatedDataSource, ListViewItem lvItem)
+        private bool CanMoveDownOnListView(IEnumerable<INamed> relatedDataSource, ListViewItem lvItem)
         {
             var selectedItems = lvItem.ListView.SelectedItems;
             var lvIndex = lvItem.Index;
@@ -201,7 +202,7 @@ namespace DbScriptRunner.UI
             bool canMoveDown = (
                 selectedItems.Count > 1 &&
                 selectedItemIndex < maxSelectedItemsIndex &&
-                relatedDataSource[lvIndex + 1] != selectedItems[selectedItemIndex + 1].Tag
+                relatedDataSource.ElementAt(lvIndex + 1) != selectedItems[selectedItemIndex + 1].Tag
                 );
 
             canMoveDown = canMoveDown ||
@@ -209,13 +210,13 @@ namespace DbScriptRunner.UI
                 lvIndex < maxLvIndex &&
                 (selectedItems.Count == 1 ||
                 (selectedItems.Count > 1 &&
-                ((selectedItemIndex < maxSelectedItemsIndex && relatedDataSource[lvIndex + 1] != selectedItems[selectedItemIndex + 1].Tag) || selectedItemIndex == maxSelectedItemsIndex)
+                ((selectedItemIndex < maxSelectedItemsIndex && relatedDataSource.ElementAt(lvIndex + 1) != selectedItems[selectedItemIndex + 1].Tag) || selectedItemIndex == maxSelectedItemsIndex)
                 )));
 
             return canMoveDown;
         }
 
-        private bool CanMoveUpOnListView(List<INamed> relatedDataSource, ListViewItem lvItem)
+        private bool CanMoveUpOnListView(IEnumerable<INamed> relatedDataSource, ListViewItem lvItem)
         {
             var selectedItems = lvItem.ListView.SelectedItems;
             var lvIndex = lvItem.Index;
@@ -224,7 +225,7 @@ namespace DbScriptRunner.UI
             bool canMoveUp = ( 
                 selectedItems.Count > 1 &&
                 selectedItemIndex > 0 &&
-                relatedDataSource[lvIndex - 1] != selectedItems[selectedItemIndex - 1].Tag
+                relatedDataSource.ElementAt(lvIndex - 1) != selectedItems[selectedItemIndex - 1].Tag
                 );
 
             canMoveUp = canMoveUp ||
@@ -232,7 +233,7 @@ namespace DbScriptRunner.UI
                 lvIndex > 0 &&
                 (selectedItems.Count == 1 ||
                 (selectedItems.Count > 1 &&
-                ((selectedItemIndex > 0 && relatedDataSource[lvIndex - 1] != selectedItems[selectedItemIndex - 1].Tag) || selectedItemIndex == 0)
+                ((selectedItemIndex > 0 && relatedDataSource.ElementAt(lvIndex - 1) != selectedItems[selectedItemIndex - 1].Tag) || selectedItemIndex == 0)
                 ))
                 );
 

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataPersistence.cs" />
+    <Compile Include="Entities\ArrangeableList.cs" />
     <Compile Include="Entities\Database.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Interfaces\IRepository.cs" />

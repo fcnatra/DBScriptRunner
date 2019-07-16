@@ -9,9 +9,9 @@ namespace DbScriptRunnerLogic
     {
         public IRepository Repository { get; set; }
 
-        public List<INamed> Items { get; set; } = new List<INamed>();
+        public IEnumerable<INamed> Items { get; set; } = new ArrangeableList<INamed>();
 
-        public List<INamed> Load()
+        public IEnumerable<INamed> Load()
         {
             string data = Repository.Load();
             Items = DeserializeItems(data);
@@ -34,11 +34,11 @@ namespace DbScriptRunnerLogic
             return data;
         }
 
-        private List<INamed> DeserializeItems(string data)
+        private ArrangeableList<INamed> DeserializeItems(string data)
         {
             var dataRows = data.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 
-            var items = new List<INamed>();
+            var items = new ArrangeableList<INamed>();
             foreach (var dataRow in dataRows)
             {
                 if (!string.IsNullOrEmpty(dataRow)) 

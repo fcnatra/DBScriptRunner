@@ -3,6 +3,8 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FakeItEasy;
 using System.Collections.Generic;
+using DbScriptRunnerLogic.Entities;
+using DbScriptRunnerLogic.Interfaces;
 
 namespace DbScriptRunnerTests
 {
@@ -31,7 +33,7 @@ namespace DbScriptRunnerTests
             var app = new DbScriptRunner.Services.AppData();
 
             app.Databases = new System.Collections.Generic.List<DbScriptRunnerLogic.Interfaces.INamed>();
-            app.Databases.AddRange(databases);
+            ((List<INamed>)app.Databases).AddRange(databases);
 
             A.CallTo(() => fakeRepository.Save(A<string>.That.IsNotNull())).Invokes((x) => repositoryContent = (string)x.Arguments.First());
 
@@ -45,7 +47,7 @@ namespace DbScriptRunnerTests
             secondInstanceSameUser.DataPersistence = dataPersistence;
             secondInstanceSameUser.RecoverLastStatus();
 
-            Assert.AreEqual(expectedNumberOfDatabases, app.Databases.Count);
+            Assert.AreEqual(expectedNumberOfDatabases, app.Databases.Count());
             var expectedDatabasesWereFound = true;
             foreach (var db in app.Databases)
             {
@@ -55,7 +57,69 @@ namespace DbScriptRunnerTests
             Assert.IsTrue(expectedDatabasesWereFound);
         }
 
-        
+        [TestMethod]
+        public void GivenThreeItemsMovingUpTheSecondWillPutItFirst()
+        {
+            var testList = new ArrangeableList<string>
+            {
+                "1", "2", "3"
+            };
+            var movedIndices = testList.MoveItemsUpOnePosition(new List<int> { 1 });
+
+            Assert.AreEqual("2", testList[0]);
+        }
+
+        [TestMethod]
+        public void GivenThreeItemsMovingUpTheFirstWillRemainTheSame()
+        {
+            var testList = new ArrangeableList<string>
+            {
+                "1", "2", "3"
+            };
+            var movedIndices = testList.MoveItemsUpOnePosition(new List<int> { 0 });
+
+            Assert.AreEqual("1", testList[0]);
+        }
+
+        [TestMethod]
+        public void GivenThreeItemsMovingUpTheLastOneWillMoveToTheSecondPlace()
+        {
+            var testList = new ArrangeableList<string>
+            {
+                "1", "2", "3"
+            };
+            var movedIndices = testList.MoveItemsUpOnePosition(new List<int> { 2 });
+
+            Assert.AreEqual("3", testList[1]);
+        }
+
+        [TestMethod]
+        public void GivenThreeItemsMovingUpTheFirstAndLastOneWillResultOn132()
+        {
+            var testList = new ArrangeableList<string>
+            {
+                "1", "2", "3"
+            };
+            var movedIndices = testList.MoveItemsUpOnePosition(new List<int> { 0, 2 });
+
+            Assert.AreEqual("1", testList[0]);
+            Assert.AreEqual("3", testList[1]);
+            Assert.AreEqual("2", testList[2]);
+        }
+
+        [TestMethod]
+        public void GivenThreeItemsMovingUpTheSecondAndLastOneWillResultOn231()
+        {
+            var testList = new ArrangeableList<string>
+            {
+                "1", "2", "3"
+            };
+            var movedIndices = testList.MoveItemsUpOnePosition(new List<int> { 1, 2 });
+
+            Assert.AreEqual("2", testList[0]);
+            Assert.AreEqual("3", testList[1]);
+            Assert.AreEqual("1", testList[2]);
+        }
     }
 }
 

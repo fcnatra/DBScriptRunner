@@ -1,4 +1,5 @@
 ﻿using DbScriptRunnerLogic;
+using DbScriptRunnerLogic.Entities;
 using DbScriptRunnerLogic.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace DbScriptRunner.Services
 
         public ApplicationStatusBackup StatusBackup { get; set; }
 
-        public List<INamed> Databases { get; set; }
+        public IEnumerable<INamed> Databases { get; set; }
 
         public DataPersistence DataPersistence { get; set; }
 
@@ -71,7 +72,7 @@ namespace DbScriptRunner.Services
 
         internal bool DatabasesHaveChanged()
         {
-            return Databases.GetHasChanged();
+            return ((ArrangeableList<INamed>)Databases).ListHasChanged;
         }
     }
 }
