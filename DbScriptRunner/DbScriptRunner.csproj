@@ -49,7 +49,6 @@
     <Compile Include="Services\AppData.cs" />
     <Compile Include="Services\ApplicationStatusBackup.cs" />
     <Compile Include="UI\CommonDialogs.cs" />
-    <Compile Include="Services\ListExtension.cs" />
     <Compile Include="UI\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>

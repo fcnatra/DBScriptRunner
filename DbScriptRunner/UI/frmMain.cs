@@ -133,7 +133,8 @@ namespace DbScriptRunner.UI
                 return;
             }
 
-            var indicesToSelect = MoveDownSelectedItemsOnePosition(_appData.Databases, lvDatabases);
+            var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
+            var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).MoveItemsDownOnePosition(selectedIndices);
             PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
         }
 
@@ -165,49 +166,6 @@ namespace DbScriptRunner.UI
                 ((List<INamed>)relatedDataSource).RemoveAt(lvItem.Index);
 
             return indicesToSelect;
-        }
-
-        private List<int> MoveDownSelectedItemsOnePosition(IEnumerable<INamed> relatedDataSource, ListView listView)
-        {
-            var selectedItems = listView.SelectedItems;
-            var movedIndices = new List<int>();
-            for (var selectedItemIndex = selectedItems.Count-1; selectedItemIndex >= 0; selectedItemIndex--)
-            {
-                var lvItem = selectedItems[selectedItemIndex];
-                if (CanMoveDownOnListView(relatedDataSource, lvItem))
-                {
-                    ((List<INamed>)relatedDataSource).MoveDownItemOnePosition(lvItem.Index);
-                    movedIndices.Add(lvItem.Index + 1);
-                }
-                else
-                    movedIndices.Add(lvItem.Index);
-            }
-            return movedIndices;
-        }
-
-        private bool CanMoveDownOnListView(IEnumerable<INamed> relatedDataSource, ListViewItem lvItem)
-        {
-            var selectedItems = lvItem.ListView.SelectedItems;
-            var lvIndex = lvItem.Index;
-            int selectedItemIndex = selectedItems.IndexOf(lvItem);
-            var maxSelectedItemsIndex = selectedItems.Count - 1;
-            var maxLvIndex = lvItem.ListView.Items.Count - 1;
-
-            bool canMoveDown = (
-                selectedItems.Count > 1 &&
-                selectedItemIndex < maxSelectedItemsIndex &&
-                relatedDataSource.ElementAt(lvIndex + 1) != selectedItems[selectedItemIndex + 1].Tag
-                );
-
-            canMoveDown = canMoveDown ||
-                (
-                lvIndex < maxLvIndex &&
-                (selectedItems.Count == 1 ||
-                (selectedItems.Count > 1 &&
-                ((selectedItemIndex < maxSelectedItemsIndex && relatedDataSource.ElementAt(lvIndex + 1) != selectedItems[selectedItemIndex + 1].Tag) || selectedItemIndex == maxSelectedItemsIndex)
-                )));
-
-            return canMoveDown;
         }
 
         private bool IsThereAnyItemSelected(ListView listView)
