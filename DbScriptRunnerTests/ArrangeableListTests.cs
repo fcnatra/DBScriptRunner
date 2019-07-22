@@ -73,6 +73,52 @@ namespace DbScriptRunnerTests
             },
         };
 
+        private static IEnumerable<object[]> _dataSetsForRemoveOps => new List<object[]>
+        {
+            new object[]
+            {
+                new ArrangeableList<string> {"1", "2", "3"}, new List<int> { 1 }, new List<string>{"1", "3"},
+            },
+            new object[]
+            {
+                new ArrangeableList<string> {"1", "2", "3"}, new List<int> { 0 }, new List<string>{"2", "3"}
+            },
+            new object[]
+            {
+                new ArrangeableList<string> {"1", "2", "3"}, new List<int> { 2 }, new List<string>{"1", "2"}
+            },
+            new object[]
+            {
+                new ArrangeableList<string> {"1", "2", "3"}, new List<int> { 0, 2 }, new List<string>{"2"}
+            },
+            new object[]
+            {
+                new ArrangeableList<string> {"1", "2", "3"}, new List<int> { 1, 2 }, new List<string>{"1"}
+            },
+            new object[]
+            {
+                new ArrangeableList<string> {"1", "2", "3"}, new List<int> { 0, 1 }, new List<string>{"3"}
+            },
+            new object[]
+            {
+                new ArrangeableList<string> {"1", "2", "3", "4", "5", "6"},
+                new List<int> { 1, 3, 4 },
+                new List<string>{"1", "3", "6"}
+            },
+            new object[]
+            {
+                new ArrangeableList<string> {"1", "2"},
+                new List<int> {0, 1},
+                new List<string>{}
+            },
+            new object[]
+            {
+                new ArrangeableList<string> {"1"},
+                new List<int> {0},
+                new List<string>{}
+            },
+        };
+
         [TestMethod]
         public void GivenAPersistedDatabaseList_WhenLoadingListBack_ListIsTheSame()
         {
@@ -143,6 +189,19 @@ namespace DbScriptRunnerTests
             var movedIndices = inputList.MoveItemsDownOnePosition(indicesToMove);
 
             var movedAsExpected = !movedIndices
+                .Select(x => expectedList[x] == inputList[x])
+                .Any(x => x == false);
+
+            Assert.IsTrue(movedAsExpected);
+        }
+
+        [DataTestMethod]
+        [DynamicData(nameof(_dataSetsForRemoveOps))]
+        public void GivenAnInputList_RemovingSelectedIndices_WillEndUpOnExpectedList(ArrangeableList<string> inputList, List<int> indicesToRemove, List<string> expectedList)
+        {
+            var removedIndices = inputList.RemoveItems(indicesToRemove);
+
+            var movedAsExpected = !removedIndices
                 .Select(x => expectedList[x] == inputList[x])
                 .Any(x => x == false);
 

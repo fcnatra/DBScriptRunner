@@ -50,7 +50,34 @@ namespace DbScriptRunnerLogic.Entities
             return movedIndices;
         }
 
-        public void MoveItemUpOnePosition(int indexToMove)
+        public List<int> RemoveItems(List<int> indicesToRemove)
+        {
+            var removedIndices = new List<int>();
+
+            var maxIndex = this.Count - 1;
+            for (var i = 0; i <= indicesToRemove.Count-1; i++)
+            {
+                int index = indicesToRemove[i];
+                if (index >= 0 && index <= maxIndex)
+                {
+                    this.RemoveAt(index);
+
+                    var removedIndex = index;
+                    maxIndex = this.Count - 1;
+                    if (removedIndex > maxIndex) removedIndex--;
+                    if (removedIndex >= 0 && !removedIndices.Contains(removedIndex)) removedIndices.Add(removedIndex);
+
+                    for (int j = i + 1; j <= indicesToRemove.Count - 1; j++) indicesToRemove[j]--;
+                }
+            }
+
+            removedIndices.RemoveAll(x => x > maxIndex);
+
+            return removedIndices;
+        }
+
+
+        private void MoveItemUpOnePosition(int indexToMove)
         {
             if (indexToMove < 1) return;
 
@@ -60,7 +87,7 @@ namespace DbScriptRunnerLogic.Entities
             this.ListHasChanged = true;
         }
 
-        public void MoveItemDownOnePosition(int indexToMove)
+        private void MoveItemDownOnePosition(int indexToMove)
         {
             var maxIndex = this.Count() - 1;
             if (indexToMove == maxIndex) return;
@@ -69,11 +96,6 @@ namespace DbScriptRunnerLogic.Entities
             this.RemoveAt(indexToMove);
             this.Insert(indexToMove + 1, item);
             this.ListHasChanged = true;
-        }
-
-        public bool IsEmpty()
-        {
-            return !this.Any();
         }
 
         private bool CanMoveUp(int itemIndex, List<int> indicesToMove)

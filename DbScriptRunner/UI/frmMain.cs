@@ -145,27 +145,10 @@ namespace DbScriptRunner.UI
                 CommonDialogs.TellUserToSelectItemsInOrderToMove();
                 return;
             }
-            var indicesToSelect = RemoveItemsfromListView(_appData.Databases, lvDatabases);
+
+            var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
+            var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).RemoveItems(selectedIndices);
             PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
-        }
-
-        private List<int> RemoveItemsfromListView(IEnumerable<INamed> relatedDataSource, ListView listView)
-        {
-            var selectedItems = listView.SelectedItems;
-            var maxLvItemIndex = listView.Items.Count - 1;
-
-            var itemIndex = selectedItems[0].Index;
-            var indicesToSelect = new List<int>();
-            if (itemIndex == relatedDataSource.Count()-1)
-                indicesToSelect = new List<int>() { maxLvItemIndex - (maxLvItemIndex > 0 ? 1 : 0) };
-            else
-                indicesToSelect = new List<int>() { selectedItems[0].Index };
-
-
-            foreach (ListViewItem lvItem in selectedItems)
-                ((List<INamed>)relatedDataSource).RemoveAt(lvItem.Index);
-
-            return indicesToSelect;
         }
 
         private bool IsThereAnyItemSelected(ListView listView)
