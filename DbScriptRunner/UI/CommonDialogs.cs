@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace DbScriptRunner.UI
 {
@@ -34,6 +35,11 @@ namespace DbScriptRunner.UI
         public static void TellUserToSelectItemsInOrderToMove()
         {
             MessageBox.Show("Select items from the list in order to operate with them", "INFORMATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        internal static void TellUserToSelectJustOneItem()
+        {
+            MessageBox.Show("Please select an item (only one) in order to proceed", "INFORMATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

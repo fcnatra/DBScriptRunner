@@ -1,12 +1,13 @@
-﻿using System;
+﻿using DbScriptRunnerLogic.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DbScriptRunnerLogic.Entities
 {
-    public class ArrangeableList<T> : List<T>
+    public class ArrangeableList<T> : List<T>, IArrangeableList<T>
     {
-        public bool ListHasChanged { get; private set; }
+        public bool ListHasChanged { get; private set; } = false;
 
         public List<int> MoveItemsUpOnePosition(List<int> indicesToMove)
         {
@@ -27,6 +28,42 @@ namespace DbScriptRunnerLogic.Entities
             }
 
             return movedIndices;
+        }
+
+        /// <summary>
+        /// Use this method to let the list know that an element has changed
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="element"></param>
+        public void ReplaceAt(int index, T element)
+        {
+            this[index] = element;
+            this.ListHasChanged = true;
+        }
+
+        public new void Add(T element)
+        {
+            base.Add(element);
+            this.ListHasChanged = true;
+        }
+
+        public new void AddRange(IEnumerable<T> elements)
+        {
+            base.AddRange(elements);
+            this.ListHasChanged = true;
+        }
+
+        public new void RemoveAt(int index)
+        {
+            base.RemoveAt(index);
+            this.ListHasChanged = true;
+        }
+
+        public void InitializeWith(IEnumerable<T> elements)
+        {
+            this.Clear();
+            this.AddRange(elements);
+            this.ListHasChanged = false;
         }
 
         public List<int> MoveItemsDownOnePosition(List<int> indicesToMove)
@@ -50,7 +87,7 @@ namespace DbScriptRunnerLogic.Entities
             return movedIndices;
         }
 
-        public List<int> RemoveItems(List<int> indicesToRemove)
+        public List<int> RemoveAt(List<int> indicesToRemove)
         {
             var removedIndices = new List<int>();
 
@@ -75,7 +112,6 @@ namespace DbScriptRunnerLogic.Entities
 
             return removedIndices;
         }
-
 
         private void MoveItemUpOnePosition(int indexToMove)
         {

@@ -141,7 +141,7 @@ namespace DbScriptRunnerTests
             };
             var app = new DbScriptRunner.Services.AppData();
 
-            app.Databases = new System.Collections.Generic.List<DbScriptRunnerLogic.Interfaces.INamed>();
+            app.Databases = new ArrangeableList<INamed>();
             ((List<INamed>)app.Databases).AddRange(databases);
 
             A.CallTo(() => fakeRepository.Save(A<string>.That.IsNotNull())).Invokes((x) => repositoryContent = (string)x.Arguments.First());
@@ -199,13 +199,72 @@ namespace DbScriptRunnerTests
         [DynamicData(nameof(_dataSetsForRemoveOps))]
         public void GivenAnInputList_RemovingSelectedIndices_WillEndUpOnExpectedList(ArrangeableList<string> inputList, List<int> indicesToRemove, List<string> expectedList)
         {
-            var removedIndices = inputList.RemoveItems(indicesToRemove);
+            var removedIndices = inputList.RemoveAt(indicesToRemove);
 
             var movedAsExpected = !removedIndices
                 .Select(x => expectedList[x] == inputList[x])
                 .Any(x => x == false);
 
             Assert.IsTrue(movedAsExpected);
+        }
+
+        [TestMethod]
+        public void WhenTheListIsInitializedAppearsAsNOChanged()
+        {
+            var arrangeableList = new ArrangeableList<string>();
+            arrangeableList.InitializeWith(new List<string> { "1", "2", "3" });
+
+            Assert.IsFalse(arrangeableList.ListHasChanged);
+        }
+
+        [TestMethod]
+        public void WhenAnItemIsMovedUpTheListAppearsAsChanged()
+        {
+            var arrangeableList = new ArrangeableList<string>();
+            arrangeableList.InitializeWith(new List<string> { "1", "2", "3" });
+
+            arrangeableList.MoveItemsUpOnePosition(new List<int> { 1 });
+            Assert.IsTrue(arrangeableList.ListHasChanged);
+        }
+
+        [TestMethod]
+        public void WhenAnItemIsMovedDownTheListAppearsAsChanged()
+        {
+            var arrangeableList = new ArrangeableList<string>();
+            arrangeableList.InitializeWith(new List<string> { "1", "2", "3" });
+
+            arrangeableList.MoveItemsDownOnePosition(new List<int> { 1 });
+            Assert.IsTrue(arrangeableList.ListHasChanged);
+        }
+
+        [TestMethod]
+        public void WhenAnItemIsAddedTheListAppearsAsChanged()
+        {
+            var arrangeableList = new ArrangeableList<string>();
+            arrangeableList.InitializeWith(new List<string> { "1", "2", "3" });
+
+            arrangeableList.Add("new  element");
+            Assert.IsTrue(arrangeableList.ListHasChanged);
+        }
+
+        [TestMethod]
+        public void WhenAnItemIsRemovedTheListAppearsAsChanged()
+        {
+            var arrangeableList = new ArrangeableList<string>();
+            arrangeableList.InitializeWith(new List<string> { "1", "2", "3" });
+
+            arrangeableList.RemoveAt(1);
+            Assert.IsTrue(arrangeableList.ListHasChanged);
+        }
+
+        [TestMethod]
+        public void WhenAnItemChangesTheListAppearsAsChanged()
+        {
+            var arrangeableList = new ArrangeableList<string>();
+            arrangeableList.InitializeWith(new List<string> { "1", "2", "3" });
+
+            arrangeableList.ReplaceAt(2, "changed element");
+            Assert.IsTrue(arrangeableList.ListHasChanged);
         }
     }
 }

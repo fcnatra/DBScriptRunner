@@ -13,8 +13,7 @@ namespace DbScriptRunner.UI
 {
     public partial class frmMain : Form
     {
-        private AppData _appData;
-        
+        private AppData _appData;        
 
         public frmMain()
         {
@@ -147,8 +146,57 @@ namespace DbScriptRunner.UI
             }
 
             var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
-            var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).RemoveItems(selectedIndices);
+            var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).RemoveAt(selectedIndices);
             PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
+        }
+
+        private void toolbarAddNewItem_Click(object sender, EventArgs e)
+        {
+            AddNewDatabase();
+        }
+
+        private void toolbarEdit_Click(object sender, EventArgs e)
+        {
+            EditSelectedDatabaseItem();
+
+        }
+
+        private void EditSelectedDatabaseItem()
+        {
+            if (lvDatabases.SelectedIndices.Count != 1)
+            {
+                CommonDialogs.TellUserToSelectJustOneItem();
+                return;
+            }
+
+            var editForm = new frmAddEditDatabase();
+            editForm.GetErrorsOnDatabaseInformation = _appData.GetErrorsOnDatabaseInformation;
+            var databaseList = ((ArrangeableList<INamed>)_appData.Databases);
+
+            editForm.DatabaseInformation = (Database)databaseList[lvDatabases.SelectedIndices[0]];
+
+            var dialogResult = editForm.ShowDialog();
+            if (dialogResult == DialogResult.OK)
+            {
+                var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
+                databaseList.ReplaceAt(lvDatabases.SelectedIndices[0], editForm.DatabaseInformation);
+                PopulateDatabasesListView(databaseList, lvDatabases, selectedIndices);
+            }
+        }
+
+        private void AddNewDatabase()
+        {
+            var addForm = new frmAddEditDatabase();
+            addForm.GetErrorsOnDatabaseInformation = _appData.GetErrorsOnDatabaseInformation;
+
+            var dialogResult = addForm.ShowDialog();
+            var databaseList = ((ArrangeableList<INamed>)_appData.Databases);
+            if (dialogResult == DialogResult.OK)
+            {
+                var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
+                databaseList.Add(addForm.DatabaseInformation);
+                PopulateDatabasesListView(databaseList, lvDatabases, selectedIndices);
+            }
         }
 
         private bool IsThereAnyItemSelected(ListView listView)

@@ -19,7 +19,7 @@ namespace DbScriptRunner.Services
 
         public ApplicationStatusBackup StatusBackup { get; set; }
 
-        public IEnumerable<INamed> Databases { get; set; }
+        public IArrangeableList<INamed> Databases { get; set; }
 
         public DataPersistence DataPersistence { get; set; }
 
@@ -68,6 +68,16 @@ namespace DbScriptRunner.Services
             StatusBackup.BackupContent.Add(DataPersistence.Repository.Name);
             StatusBackup.BackupContent.Add(DataPersistence.Repository.Location);
             StatusBackup.SaveStatus();
+        }
+
+        public List<string> GetErrorsOnDatabaseInformation(Database databaseInfo)
+        {
+            var errorList = new List<string>();
+
+            if (Databases.Any(x => x.Name.ToUpper() == databaseInfo.Name.ToUpper()))
+                errorList.Add("Database name is in use. Please use a different name");
+
+            return errorList;
         }
 
         internal bool DatabasesHaveChanged()

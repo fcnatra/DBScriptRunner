@@ -44,6 +44,7 @@
     <Compile Include="DataPersistence.cs" />
     <Compile Include="Entities\ArrangeableList.cs" />
     <Compile Include="Entities\Database.cs" />
+    <Compile Include="Interfaces\IArrangeableList.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IRepositoryInformation.cs" />

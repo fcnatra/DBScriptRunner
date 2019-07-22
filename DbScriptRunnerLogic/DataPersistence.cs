@@ -9,12 +9,12 @@ namespace DbScriptRunnerLogic
     {
         public IRepository Repository { get; set; }
 
-        public IEnumerable<INamed> Items { get; set; } = new ArrangeableList<INamed>();
+        public IArrangeableList<INamed> Items { get; set; } = new ArrangeableList<INamed>();
 
-        public IEnumerable<INamed> Load()
+        public IArrangeableList<INamed> Load()
         {
             string data = Repository.Load();
-            Items = DeserializeItems(data);
+            Items.InitializeWith(DeserializeItems(data));
             return Items;
         }
 

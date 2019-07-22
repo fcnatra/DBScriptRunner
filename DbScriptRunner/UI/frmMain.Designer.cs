@@ -53,6 +53,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonMoveUp = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMoveDown = new System.Windows.Forms.ToolStripButton();
+            this.toolbarBtnEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAdd = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRemove = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
@@ -70,7 +71,7 @@
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(89, 21);
             this.btnClose.TabIndex = 0;
-            this.btnClose.Text = "CLOSE";
+            this.btnClose.Text = "&CLOSE";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -239,6 +240,7 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonMoveUp,
             this.toolStripButtonMoveDown,
+            this.toolbarBtnEdit,
             this.toolStripButtonAdd,
             this.toolStripButtonRemove});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
@@ -267,6 +269,15 @@
             this.toolStripButtonMoveDown.ToolTipText = "Move Down";
             this.toolStripButtonMoveDown.Click += new System.EventHandler(this.toolbarMoveDown_Click);
             // 
+            // toolbarBtnEdit
+            // 
+            this.toolbarBtnEdit.Image = ((System.Drawing.Image)(resources.GetObject("toolbarBtnEdit.Image")));
+            this.toolbarBtnEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolbarBtnEdit.Name = "toolbarBtnEdit";
+            this.toolbarBtnEdit.Size = new System.Drawing.Size(47, 22);
+            this.toolbarBtnEdit.Text = "Edit";
+            this.toolbarBtnEdit.Click += new System.EventHandler(this.toolbarEdit_Click);
+            // 
             // toolStripButtonAdd
             // 
             this.toolStripButtonAdd.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAdd.Image")));
@@ -274,6 +285,7 @@
             this.toolStripButtonAdd.Name = "toolStripButtonAdd";
             this.toolStripButtonAdd.Size = new System.Drawing.Size(74, 22);
             this.toolStripButtonAdd.Text = "Add New";
+            this.toolStripButtonAdd.Click += new System.EventHandler(this.toolbarAddNewItem_Click);
             // 
             // toolStripButtonRemove
             // 
@@ -339,6 +351,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonMoveDown;
         private System.Windows.Forms.ToolStripButton toolStripButtonAdd;
         private System.Windows.Forms.ToolStripButton toolStripButtonRemove;
+        private System.Windows.Forms.ToolStripButton toolbarBtnEdit;
     }
 }
 
