@@ -13,7 +13,7 @@ namespace DbScriptRunner.UI
 {
     public partial class frmMain : Form
     {
-        private AppData _appData;        
+        private AppData<Database> _databasesAppData;        
 
         public frmMain()
         {
@@ -21,7 +21,7 @@ namespace DbScriptRunner.UI
 
             ConfigureLogicDependencies();
 
-            _appData.RecoverLastStatus();
+            _databasesAppData.RecoverLastStatus();
 
             InitializeControlsDesign();
         }
@@ -29,10 +29,8 @@ namespace DbScriptRunner.UI
         private void ConfigureLogicDependencies()
         {
             var fileRepository = new TextFileRepository();
-            _appData = new AppData
-            {
-                DataPersistence = new DataPersistence() { Repository = fileRepository },
-            };
+            _databasesAppData = new AppData<Database>();
+            _databasesAppData.Persistence.Repository = fileRepository;
         }
 
         private void InitializeControlsDesign()
@@ -49,7 +47,7 @@ namespace DbScriptRunner.UI
         {
             lvDatabases.Items.Clear();
 
-            var datasource = _appData.Databases;
+            var datasource = _databasesAppData.Instances;
             if (datasource == null || !datasource.Any()) return;
 
             lvDatabases.SuspendLayout();
@@ -63,6 +61,9 @@ namespace DbScriptRunner.UI
             }
 
             SelectIndicesOnListView(lvDatabases, indicesToSelect);
+
+            if (!string.IsNullOrEmpty(_databasesAppData.RepositoryInformation?.Name))
+                lblDatabasesTitle.Text = _databasesAppData.RepositoryInformation.Name.ToUpper();
 
             lvDatabases.ResumeLayout();
         }
@@ -89,7 +90,7 @@ namespace DbScriptRunner.UI
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             DialogResult dialogResult = DialogResult.OK;
-            if (_appData.DatabasesHaveChanged())
+            if (_databasesAppData.HaveChanged())
             {
                 dialogResult = MessageBox.Show("Databases changed. Want to save the current list?", "CONTENT HAVE CHANGED", MessageBoxButtons.YesNoCancel);
                 if (dialogResult == DialogResult.Yes)
@@ -99,7 +100,7 @@ namespace DbScriptRunner.UI
             if (dialogResult == DialogResult.Cancel)
                 e.Cancel = true;
             else
-                _appData.BackupCurrentStatus();
+                _databasesAppData.BackupCurrentStatus();
         }
 
         private void toolbarMoveUp_Click(object sender, EventArgs e)
@@ -111,7 +112,7 @@ namespace DbScriptRunner.UI
             }
 
             var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
-            var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).MoveItemsUpOnePosition(selectedIndices);
+            var indicesToSelect = ((ArrangeableList<INamed>)_databasesAppData.Instances).MoveItemsUpOnePosition(selectedIndices);
             PopulateDatabasesListView(indicesToSelect);
         }
 
@@ -124,7 +125,7 @@ namespace DbScriptRunner.UI
             }
 
             var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
-            var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).MoveItemsDownOnePosition(selectedIndices);
+            var indicesToSelect = ((ArrangeableList<INamed>)_databasesAppData.Instances).MoveItemsDownOnePosition(selectedIndices);
             PopulateDatabasesListView(indicesToSelect);
         }
 
@@ -137,7 +138,7 @@ namespace DbScriptRunner.UI
             }
 
             var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
-            var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).RemoveAt(selectedIndices);
+            var indicesToSelect = ((ArrangeableList<INamed>)_databasesAppData.Instances).RemoveAt(selectedIndices);
             PopulateDatabasesListView(indicesToSelect);
         }
 
@@ -160,8 +161,8 @@ namespace DbScriptRunner.UI
             }
 
             var editForm = new frmAddEditDatabase();
-            editForm.GetErrorsOnDatabaseInformation = _appData.GetErrorsOnDatabaseInformation;
-            var databaseList = ((ArrangeableList<INamed>)_appData.Databases);
+            editForm.GetErrorsOnDatabaseInformation = _databasesAppData.CheckForErrorsOnName;
+            var databaseList = ((ArrangeableList<INamed>)_databasesAppData.Instances);
 
             editForm.DatabaseInformation = (Database)databaseList[lvDatabases.SelectedIndices[0]];
 
@@ -177,10 +178,10 @@ namespace DbScriptRunner.UI
         private void AddNewDatabase()
         {
             var addForm = new frmAddEditDatabase();
-            addForm.GetErrorsOnDatabaseInformation = _appData.GetErrorsOnDatabaseInformation;
+            addForm.GetErrorsOnDatabaseInformation = _databasesAppData.CheckForErrorsOnName;
 
             var dialogResult = addForm.ShowDialog();
-            var databaseList = ((ArrangeableList<INamed>)_appData.Databases);
+            var databaseList = ((ArrangeableList<INamed>)_databasesAppData.Instances);
             if (dialogResult == DialogResult.OK)
             {
                 var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
@@ -196,12 +197,12 @@ namespace DbScriptRunner.UI
 
         private void menuOpenServersConfiguration_Click(object sender, EventArgs e)
         {
-            var destinationInfo = _appData.DatabaseRepositoryInformation;
+            var destinationInfo = _databasesAppData.RepositoryInformation;
 
             var fullPath = CommonDialogs.SelectFileDialogBox("", destinationInfo.Location);
             if (!string.IsNullOrEmpty(fullPath))
             {
-                _appData.LoadDatabases(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
+                _databasesAppData.Load(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
                 PopulateDatabasesListView();
             }
         }
@@ -213,12 +214,12 @@ namespace DbScriptRunner.UI
 
         private void SaveDatabases()
         {
-            var destinationInfo = _appData.DatabaseRepositoryInformation;
+            var destinationInfo = _databasesAppData.RepositoryInformation;
 
             var fullPath = CommonDialogs.SaveToFileDialogBox(destinationInfo.Name, destinationInfo.Location);
             if (!string.IsNullOrEmpty(fullPath))
             {
-                _appData.SaveDatabases(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
+                _databasesAppData.Save(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
             }
         }
 
@@ -230,6 +231,11 @@ namespace DbScriptRunner.UI
         private void editSelectedServerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EditSelectedDatabaseItem();
+        }
+
+        private void menuOpenScriptConfiguration_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

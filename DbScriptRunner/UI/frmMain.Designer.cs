@@ -43,12 +43,12 @@
             this.addServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editSelectedServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scriptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openScriptListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveScriptListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadScriptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.unloadSelectedScriptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.runScriptsOnServersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pARALLELRunScriptsOnServersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuOpenScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuLoadScript = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuUnloadScript = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuRunScriptsSequentially = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuRunScriptsParallel = new System.Windows.Forms.ToolStripMenuItem();
             this.lvDatabases = new System.Windows.Forms.ListView();
             this.toolbar = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonMoveUp = new System.Windows.Forms.ToolStripButton();
@@ -181,51 +181,52 @@
             // scriptsToolStripMenuItem
             // 
             this.scriptsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openScriptListToolStripMenuItem,
-            this.saveScriptListToolStripMenuItem,
-            this.loadScriptsToolStripMenuItem,
-            this.unloadSelectedScriptsToolStripMenuItem,
-            this.runScriptsOnServersToolStripMenuItem,
-            this.pARALLELRunScriptsOnServersToolStripMenuItem});
+            this.menuOpenScriptConfiguration,
+            this.menuSaveScriptConfiguration,
+            this.menuLoadScript,
+            this.menuUnloadScript,
+            this.menuRunScriptsSequentially,
+            this.menuRunScriptsParallel});
             this.scriptsToolStripMenuItem.Name = "scriptsToolStripMenuItem";
             this.scriptsToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.scriptsToolStripMenuItem.Text = "&Scripts";
             // 
-            // openScriptListToolStripMenuItem
+            // menuOpenScriptConfiguration
             // 
-            this.openScriptListToolStripMenuItem.Name = "openScriptListToolStripMenuItem";
-            this.openScriptListToolStripMenuItem.Size = new System.Drawing.Size(309, 22);
-            this.openScriptListToolStripMenuItem.Text = "&Open Script Configuration";
+            this.menuOpenScriptConfiguration.Name = "menuOpenScriptConfiguration";
+            this.menuOpenScriptConfiguration.Size = new System.Drawing.Size(309, 22);
+            this.menuOpenScriptConfiguration.Text = "&Open Script Configuration";
+            this.menuOpenScriptConfiguration.Click += new System.EventHandler(this.menuOpenScriptConfiguration_Click);
             // 
-            // saveScriptListToolStripMenuItem
+            // menuSaveScriptConfiguration
             // 
-            this.saveScriptListToolStripMenuItem.Name = "saveScriptListToolStripMenuItem";
-            this.saveScriptListToolStripMenuItem.Size = new System.Drawing.Size(309, 22);
-            this.saveScriptListToolStripMenuItem.Text = "&Save Script Configuration";
+            this.menuSaveScriptConfiguration.Name = "menuSaveScriptConfiguration";
+            this.menuSaveScriptConfiguration.Size = new System.Drawing.Size(309, 22);
+            this.menuSaveScriptConfiguration.Text = "&Save Script Configuration";
             // 
-            // loadScriptsToolStripMenuItem
+            // menuLoadScript
             // 
-            this.loadScriptsToolStripMenuItem.Name = "loadScriptsToolStripMenuItem";
-            this.loadScriptsToolStripMenuItem.Size = new System.Drawing.Size(309, 22);
-            this.loadScriptsToolStripMenuItem.Text = "&Load scripts into this configuration";
+            this.menuLoadScript.Name = "menuLoadScript";
+            this.menuLoadScript.Size = new System.Drawing.Size(309, 22);
+            this.menuLoadScript.Text = "&Load scripts into this configuration";
             // 
-            // unloadSelectedScriptsToolStripMenuItem
+            // menuUnloadScript
             // 
-            this.unloadSelectedScriptsToolStripMenuItem.Name = "unloadSelectedScriptsToolStripMenuItem";
-            this.unloadSelectedScriptsToolStripMenuItem.Size = new System.Drawing.Size(309, 22);
-            this.unloadSelectedScriptsToolStripMenuItem.Text = "&Unload selected scripts";
+            this.menuUnloadScript.Name = "menuUnloadScript";
+            this.menuUnloadScript.Size = new System.Drawing.Size(309, 22);
+            this.menuUnloadScript.Text = "&Unload selected scripts";
             // 
-            // runScriptsOnServersToolStripMenuItem
+            // menuRunScriptsSequentially
             // 
-            this.runScriptsOnServersToolStripMenuItem.Name = "runScriptsOnServersToolStripMenuItem";
-            this.runScriptsOnServersToolStripMenuItem.Size = new System.Drawing.Size(309, 22);
-            this.runScriptsOnServersToolStripMenuItem.Text = "&Run selected scripts on servers - Sequentially";
+            this.menuRunScriptsSequentially.Name = "menuRunScriptsSequentially";
+            this.menuRunScriptsSequentially.Size = new System.Drawing.Size(309, 22);
+            this.menuRunScriptsSequentially.Text = "&Run selected scripts on servers - Sequentially";
             // 
-            // pARALLELRunScriptsOnServersToolStripMenuItem
+            // menuRunScriptsParallel
             // 
-            this.pARALLELRunScriptsOnServersToolStripMenuItem.Name = "pARALLELRunScriptsOnServersToolStripMenuItem";
-            this.pARALLELRunScriptsOnServersToolStripMenuItem.Size = new System.Drawing.Size(309, 22);
-            this.pARALLELRunScriptsOnServersToolStripMenuItem.Text = "Run selected scripts on servers - &PARALLEL";
+            this.menuRunScriptsParallel.Name = "menuRunScriptsParallel";
+            this.menuRunScriptsParallel.Size = new System.Drawing.Size(309, 22);
+            this.menuRunScriptsParallel.Text = "Run selected scripts on servers - &PARALLEL";
             // 
             // lvDatabases
             // 
@@ -304,25 +305,27 @@
             // 
             // lblDatabasesTitle
             // 
-            this.lblDatabasesTitle.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.lblDatabasesTitle.BackColor = System.Drawing.SystemColors.ControlLight;
             this.lblDatabasesTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblDatabasesTitle.Location = new System.Drawing.Point(13, 66);
+            this.lblDatabasesTitle.Location = new System.Drawing.Point(13, 60);
             this.lblDatabasesTitle.Name = "lblDatabasesTitle";
-            this.lblDatabasesTitle.Size = new System.Drawing.Size(317, 16);
+            this.lblDatabasesTitle.Size = new System.Drawing.Size(317, 22);
             this.lblDatabasesTitle.TabIndex = 8;
             this.lblDatabasesTitle.Text = "DATABASES";
+            this.lblDatabasesTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblScriptsTitle
             // 
             this.lblScriptsTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblScriptsTitle.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.lblScriptsTitle.BackColor = System.Drawing.SystemColors.ControlLight;
             this.lblScriptsTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblScriptsTitle.Location = new System.Drawing.Point(337, 66);
+            this.lblScriptsTitle.Location = new System.Drawing.Point(337, 60);
             this.lblScriptsTitle.Name = "lblScriptsTitle";
-            this.lblScriptsTitle.Size = new System.Drawing.Size(458, 16);
+            this.lblScriptsTitle.Size = new System.Drawing.Size(458, 22);
             this.lblScriptsTitle.TabIndex = 10;
             this.lblScriptsTitle.Text = "SCRIPTS";
+            this.lblScriptsTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lvScripts
             // 
@@ -383,12 +386,12 @@
         private System.Windows.Forms.ToolStripMenuItem addServerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editSelectedServerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scriptsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loadScriptsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem runScriptsOnServersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pARALLELRunScriptsOnServersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem unloadSelectedScriptsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openScriptListToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveScriptListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuLoadScript;
+        private System.Windows.Forms.ToolStripMenuItem menuRunScriptsSequentially;
+        private System.Windows.Forms.ToolStripMenuItem menuRunScriptsParallel;
+        private System.Windows.Forms.ToolStripMenuItem menuUnloadScript;
+        private System.Windows.Forms.ToolStripMenuItem menuOpenScriptConfiguration;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveScriptConfiguration;
         public System.Windows.Forms.ListView lvDatabases;
         private System.Windows.Forms.ToolStrip toolbar;
         private System.Windows.Forms.ToolStripButton toolStripButtonMoveUp;

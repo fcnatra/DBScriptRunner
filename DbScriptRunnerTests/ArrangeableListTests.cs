@@ -123,43 +123,42 @@ namespace DbScriptRunnerTests
         public void GivenAPersistedDatabaseList_WhenLoadingListBack_ListIsTheSame()
         {
             // GIVEN
-            var databases = new List<DbScriptRunnerLogic.Entities.Database>()
+            var databases = (IArrangeableList<INamed>)new ArrangeableList<INamed>()
             {
-                new DbScriptRunnerLogic.Entities.Database{Name = "one"},
-                new DbScriptRunnerLogic.Entities.Database{Name = "two"}
+                new Database {Name = "one"},
+                new Database {Name = "two"}
             };
             var expectedNumberOfDatabases = databases.Count();
             string repositoryContent = "";
 
-            var fakeRepository = A.Fake<DbScriptRunnerLogic.Interfaces.IRepository>();
+            var fakeRepository = A.Fake<IRepository>();
+            A.CallTo(() => fakeRepository.Save(A<string>.That.IsNotNull()))
+                .Invokes((x) => repositoryContent = (string)x.Arguments.First());
             fakeRepository.Location = "c:\\temp";
             fakeRepository.Name = "testing.txt";
 
-            var dataPersistence = new DbScriptRunnerLogic.DataPersistence
+            var dataPersistence = new DbScriptRunnerLogic.DataPersistence<Database>
             {
                 Repository = fakeRepository
             };
-            var app = new DbScriptRunner.Services.AppData();
 
-            app.Databases = new ArrangeableList<INamed>();
-            ((List<INamed>)app.Databases).AddRange(databases);
+            var dbAppConfig = new DbScriptRunner.Services.AppData<Database>();
+            dbAppConfig.Instances = databases;
 
-            A.CallTo(() => fakeRepository.Save(A<string>.That.IsNotNull())).Invokes((x) => repositoryContent = (string)x.Arguments.First());
-
-            app.DataPersistence = dataPersistence;
-            app.SaveDatabases(fakeRepository.Name, fakeRepository.Location);
-            app.BackupCurrentStatus();
+            dbAppConfig.Persistence = dataPersistence;
+            dbAppConfig.Save(fakeRepository.Name, fakeRepository.Location);
+            dbAppConfig.BackupCurrentStatus();
 
             // WHEN
             A.CallTo(() => fakeRepository.Load()).Returns(repositoryContent);
 
-            var secondInstanceSameUser = new DbScriptRunner.Services.AppData();
-            secondInstanceSameUser.DataPersistence = dataPersistence;
+            var secondInstanceSameUser = new DbScriptRunner.Services.AppData<Database>();
+            secondInstanceSameUser.Persistence = dataPersistence;
             secondInstanceSameUser.RecoverLastStatus();
 
-            Assert.AreEqual(expectedNumberOfDatabases, app.Databases.Count());
+            Assert.AreEqual(expectedNumberOfDatabases, dbAppConfig.Instances.Count());
             var expectedDatabasesWereFound = true;
-            foreach (var db in app.Databases)
+            foreach (var db in dbAppConfig.Instances)
             {
                 expectedDatabasesWereFound = databases.Any(expectedDb => expectedDb.Name == db.Name);
                 if (!expectedDatabasesWereFound) break;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DbScriptRunnerLogic
 {
-    public class DataPersistence
+    public class DataPersistence<T> where T: INamed, new()
     {
         public IRepository Repository { get; set; }
 
@@ -42,7 +42,7 @@ namespace DbScriptRunnerLogic
             foreach (var dataRow in dataRows)
             {
                 if (!string.IsNullOrEmpty(dataRow)) 
-                    items.Add(new Entities.Database { Name = dataRow });
+                    items.Add(new T { Name = dataRow });
             }
             return items;
         }

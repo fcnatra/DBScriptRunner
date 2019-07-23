@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="DataPersistence.cs" />
     <Compile Include="Entities\ArrangeableList.cs" />
+    <Compile Include="Entities\Script.cs" />
     <Compile Include="Entities\Database.cs" />
     <Compile Include="Interfaces\IArrangeableList.cs" />
     <Compile Include="Interfaces\INamed.cs" />

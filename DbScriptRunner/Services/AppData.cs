@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DbScriptRunner.Services
 {
-    public class AppData
+    public class AppData<T> where T : INamed, new()
     {
         public AppData()
         {
@@ -19,27 +19,22 @@ namespace DbScriptRunner.Services
 
         public ApplicationStatusBackup StatusBackup { get; set; }
 
-        public IArrangeableList<INamed> Databases { get; set; }
-
-        public DataPersistence DataPersistence { get; set; }
-
-        public IRepositoryInformation DatabaseRepositoryInformation => DataPersistence?.Repository;
-
         public void RecoverLastStatus()
         {
             try
             {
                 StatusBackup.RecoverStatus();
 
-                var databaseName = "";
-                var databaseLocation = "";
+                var dbConfigurationFileName = "";
+                var dbConfigurationFileLocation = "";
 
                 if (StatusBackup.BackupContent.Count > 0)
                 {
-                    databaseName = StatusBackup.BackupContent[0];
-                    databaseLocation = StatusBackup.BackupContent[1];
+                    dbConfigurationFileName = StatusBackup.BackupContent[0];
+                    dbConfigurationFileLocation = StatusBackup.BackupContent[1];
+
                     StatusBackup.BackupContent.Clear();
-                    LoadDatabases(databaseName, databaseLocation);
+                    Load(dbConfigurationFileName, dbConfigurationFileLocation);
                 }
             }
             catch
@@ -48,41 +43,48 @@ namespace DbScriptRunner.Services
             }
         }
 
-        public void LoadDatabases(string locationName, string locationPath)
-        {
-            DataPersistence.Repository.Name = locationName;
-            DataPersistence.Repository.Location = locationPath;
-            Databases = DataPersistence.Load();
-        }
-
-        public void SaveDatabases(string locationName, string locationPath)
-        {
-            DataPersistence.Repository.Name = locationName;
-            DataPersistence.Repository.Location = locationPath;
-            DataPersistence.Items = Databases;
-            DataPersistence.Save();
-        }
-
         public void BackupCurrentStatus()
         {
-            StatusBackup.BackupContent.Add(DataPersistence.Repository.Name);
-            StatusBackup.BackupContent.Add(DataPersistence.Repository.Location);
+            StatusBackup.BackupContent.Add(Persistence.Repository.Name);
+            StatusBackup.BackupContent.Add(Persistence.Repository.Location);
             StatusBackup.SaveStatus();
         }
 
-        public List<string> GetErrorsOnDatabaseInformation(Database databaseInfo)
+        public DataPersistence<T> Persistence { get; set; } = new DataPersistence<T>();
+
+        public IRepositoryInformation RepositoryInformation => Persistence?.Repository;
+
+        public IArrangeableList<INamed> Instances { get; set; }
+
+        public void Load(string locationName, string locationPath)
+        {
+            Persistence.Repository.Name = locationName;
+            Persistence.Repository.Location = locationPath;
+            Instances = Persistence.Load();
+        }
+
+        public void Save(string locationName, string locationPath)
+        {
+            Persistence.Repository.Name = locationName;
+            Persistence.Repository.Location = locationPath;
+            Persistence.Items = Instances;
+            Persistence.Save();
+        }
+
+        public List<string> CheckForErrorsOnName(T InstanceInfo)
         {
             var errorList = new List<string>();
 
-            if (Databases.Any(x => x.Name.ToUpper() == databaseInfo.Name.ToUpper()))
-                errorList.Add("Database name is in use. Please use a different name");
+            if (Instances.Any(x => x.Name.ToUpper() == InstanceInfo.Name.ToUpper()))
+                errorList.Add("Instance name is already in use. Please use a different name");
 
             return errorList;
         }
 
-        internal bool DatabasesHaveChanged()
+        internal bool HaveChanged()
         {
-            return ((ArrangeableList<INamed>)Databases).ListHasChanged;
+            return ((ArrangeableList<INamed>)Instances).ListHasChanged;
         }
+
     }
 }
