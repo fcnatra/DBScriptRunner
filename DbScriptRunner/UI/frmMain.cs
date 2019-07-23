@@ -42,38 +42,29 @@ namespace DbScriptRunner.UI
             lvDatabases.Columns[0].TextAlign = HorizontalAlignment.Center;
             lvDatabases.View = View.Details;
 
-            PopulateDatabasesListView(_appData.Databases, lvDatabases);
+            PopulateDatabasesListView();
         }
 
-        private void PopulateDatabasesListView(IEnumerable<INamed> dataSource, ListView listViewm, List<int> indicesToSelect = null)
+        private void PopulateDatabasesListView(List<int> indicesToSelect = null)
         {
-            lvDatabases.SuspendLayout();
-
             lvDatabases.Items.Clear();
 
-            if (dataSource != null && dataSource.Any())
+            var datasource = _appData.Databases;
+            if (datasource == null || !datasource.Any()) return;
+
+            lvDatabases.SuspendLayout();
+            int index = 0;
+            foreach (var database in datasource)
             {
-                for (int i = 0; i < _appData.Databases.Count(); i++)
-                {
-                    ListViewItem lvItem = AddFirstColumn(i);
-                    AddSecondColumn(i, lvItem);
-                }
-                SelectIndicesOnListView(lvDatabases, indicesToSelect);
+                ListViewItem lvItem = lvDatabases.Items.Add(index.ToString());
+                lvItem.Tag = database;
+                lvItem.SubItems.Add(database.Name);
+                ++index;
             }
 
+            SelectIndicesOnListView(lvDatabases, indicesToSelect);
+
             lvDatabases.ResumeLayout();
-        }
-
-        private void AddSecondColumn(int i, ListViewItem lvItem)
-        {
-            lvItem.SubItems.Add(_appData.Databases.ElementAt(i).Name);
-        }
-
-        private ListViewItem AddFirstColumn(int i)
-        {
-            var lvItem = lvDatabases.Items.Add(i.ToString());
-            lvItem.Tag = _appData.Databases.ElementAt(i);
-            return lvItem;
         }
 
         private void SelectIndicesOnListView(ListView lvControl, List<int> indicesToSelect)
@@ -121,7 +112,7 @@ namespace DbScriptRunner.UI
 
             var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
             var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).MoveItemsUpOnePosition(selectedIndices);
-            PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
+            PopulateDatabasesListView(indicesToSelect);
         }
 
         private void toolbarMoveDown_Click(object sender, EventArgs e)
@@ -134,7 +125,7 @@ namespace DbScriptRunner.UI
 
             var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
             var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).MoveItemsDownOnePosition(selectedIndices);
-            PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
+            PopulateDatabasesListView(indicesToSelect);
         }
 
         private void toolbarRemove_Click(object sender, EventArgs e)
@@ -147,7 +138,7 @@ namespace DbScriptRunner.UI
 
             var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
             var indicesToSelect = ((ArrangeableList<INamed>)_appData.Databases).RemoveAt(selectedIndices);
-            PopulateDatabasesListView(_appData.Databases, lvDatabases, indicesToSelect);
+            PopulateDatabasesListView(indicesToSelect);
         }
 
         private void toolbarAddNewItem_Click(object sender, EventArgs e)
@@ -158,7 +149,6 @@ namespace DbScriptRunner.UI
         private void toolbarEdit_Click(object sender, EventArgs e)
         {
             EditSelectedDatabaseItem();
-
         }
 
         private void EditSelectedDatabaseItem()
@@ -180,7 +170,7 @@ namespace DbScriptRunner.UI
             {
                 var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
                 databaseList.ReplaceAt(lvDatabases.SelectedIndices[0], editForm.DatabaseInformation);
-                PopulateDatabasesListView(databaseList, lvDatabases, selectedIndices);
+                PopulateDatabasesListView(selectedIndices);
             }
         }
 
@@ -195,7 +185,7 @@ namespace DbScriptRunner.UI
             {
                 var selectedIndices = lvDatabases.SelectedIndices.Cast<int>().ToList();
                 databaseList.Add(addForm.DatabaseInformation);
-                PopulateDatabasesListView(databaseList, lvDatabases, selectedIndices);
+                PopulateDatabasesListView(selectedIndices);
             }
         }
 
@@ -212,7 +202,7 @@ namespace DbScriptRunner.UI
             if (!string.IsNullOrEmpty(fullPath))
             {
                 _appData.LoadDatabases(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
-                PopulateDatabasesListView(_appData.Databases, lvDatabases);
+                PopulateDatabasesListView();
             }
         }
 
@@ -230,6 +220,16 @@ namespace DbScriptRunner.UI
             {
                 _appData.SaveDatabases(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
             }
+        }
+
+        private void addServerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddNewDatabase();
+        }
+
+        private void editSelectedServerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditSelectedDatabaseItem();
         }
     }
 }

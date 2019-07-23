@@ -209,15 +209,6 @@ namespace DbScriptRunnerTests
         }
 
         [TestMethod]
-        public void WhenTheListIsInitializedAppearsAsNOChanged()
-        {
-            var arrangeableList = new ArrangeableList<string>();
-            arrangeableList.InitializeWith(new List<string> { "1", "2", "3" });
-
-            Assert.IsFalse(arrangeableList.ListHasChanged);
-        }
-
-        [TestMethod]
         public void WhenAnItemIsMovedUpTheListAppearsAsChanged()
         {
             var arrangeableList = new ArrangeableList<string>();
@@ -265,6 +256,15 @@ namespace DbScriptRunnerTests
 
             arrangeableList.ReplaceAt(2, "changed element");
             Assert.IsTrue(arrangeableList.ListHasChanged);
+        }
+
+        [TestMethod]
+        public void WhenTheListIsInitializedAppearsAsNOTChanged()
+        {
+            var arrangeableList = new ArrangeableList<string>();
+            arrangeableList.InitializeWith(new List<string> { "1", "2", "3" });
+
+            Assert.IsFalse(arrangeableList.ListHasChanged);
         }
     }
 }

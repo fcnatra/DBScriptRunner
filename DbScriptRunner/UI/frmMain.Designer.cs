@@ -50,23 +50,26 @@
             this.runScriptsOnServersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pARALLELRunScriptsOnServersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lvDatabases = new System.Windows.Forms.ListView();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolbar = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonMoveUp = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMoveDown = new System.Windows.Forms.ToolStripButton();
             this.toolbarBtnEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAdd = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRemove = new System.Windows.Forms.ToolStripButton();
+            this.lblDatabasesTitle = new System.Windows.Forms.Label();
+            this.lblScriptsTitle = new System.Windows.Forms.Label();
+            this.lvScripts = new System.Windows.Forms.ListView();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this.toolbar.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(785, 0);
+            this.btnClose.Location = new System.Drawing.Point(715, 0);
             this.btnClose.Margin = new System.Windows.Forms.Padding(2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(89, 21);
@@ -79,10 +82,10 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 608);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 642);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(877, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(807, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -96,10 +99,10 @@
             // 
             this.panel1.Controls.Add(this.btnClose);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 585);
+            this.panel1.Location = new System.Drawing.Point(0, 619);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(877, 23);
+            this.panel1.Size = new System.Drawing.Size(807, 23);
             this.panel1.TabIndex = 3;
             // 
             // menuStrip2
@@ -111,7 +114,7 @@
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
             this.menuStrip2.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip2.Size = new System.Drawing.Size(877, 24);
+            this.menuStrip2.Size = new System.Drawing.Size(807, 24);
             this.menuStrip2.TabIndex = 5;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -166,12 +169,14 @@
             this.addServerToolStripMenuItem.Name = "addServerToolStripMenuItem";
             this.addServerToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.addServerToolStripMenuItem.Text = "&Add Database";
+            this.addServerToolStripMenuItem.Click += new System.EventHandler(this.addServerToolStripMenuItem_Click);
             // 
             // editSelectedServerToolStripMenuItem
             // 
             this.editSelectedServerToolStripMenuItem.Name = "editSelectedServerToolStripMenuItem";
             this.editSelectedServerToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.editSelectedServerToolStripMenuItem.Text = "&Edit Selected Database";
+            this.editSelectedServerToolStripMenuItem.Click += new System.EventHandler(this.editSelectedServerToolStripMenuItem_Click);
             // 
             // scriptsToolStripMenuItem
             // 
@@ -228,26 +233,27 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.lvDatabases.FullRowSelect = true;
             this.lvDatabases.HideSelection = false;
-            this.lvDatabases.Location = new System.Drawing.Point(12, 52);
+            this.lvDatabases.Location = new System.Drawing.Point(12, 85);
             this.lvDatabases.Name = "lvDatabases";
-            this.lvDatabases.Size = new System.Drawing.Size(253, 528);
+            this.lvDatabases.Size = new System.Drawing.Size(318, 529);
             this.lvDatabases.TabIndex = 6;
             this.lvDatabases.UseCompatibleStateImageBehavior = false;
             // 
-            // toolStrip1
+            // toolbar
             // 
-            this.toolStrip1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolbar.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonMoveUp,
             this.toolStripButtonMoveDown,
             this.toolbarBtnEdit,
             this.toolStripButtonAdd,
             this.toolStripButtonRemove});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(877, 25);
-            this.toolStrip1.TabIndex = 7;
-            this.toolStrip1.Text = "toolStrip1";
+            this.toolbar.Location = new System.Drawing.Point(0, 24);
+            this.toolbar.Name = "toolbar";
+            this.toolbar.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.toolbar.Size = new System.Drawing.Size(807, 25);
+            this.toolbar.TabIndex = 7;
+            this.toolbar.Text = "toolStrip1";
             // 
             // toolStripButtonMoveUp
             // 
@@ -296,14 +302,52 @@
             this.toolStripButtonRemove.Text = "Remove";
             this.toolStripButtonRemove.Click += new System.EventHandler(this.toolbarRemove_Click);
             // 
+            // lblDatabasesTitle
+            // 
+            this.lblDatabasesTitle.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.lblDatabasesTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblDatabasesTitle.Location = new System.Drawing.Point(13, 66);
+            this.lblDatabasesTitle.Name = "lblDatabasesTitle";
+            this.lblDatabasesTitle.Size = new System.Drawing.Size(317, 16);
+            this.lblDatabasesTitle.TabIndex = 8;
+            this.lblDatabasesTitle.Text = "DATABASES";
+            // 
+            // lblScriptsTitle
+            // 
+            this.lblScriptsTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblScriptsTitle.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.lblScriptsTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblScriptsTitle.Location = new System.Drawing.Point(337, 66);
+            this.lblScriptsTitle.Name = "lblScriptsTitle";
+            this.lblScriptsTitle.Size = new System.Drawing.Size(458, 16);
+            this.lblScriptsTitle.TabIndex = 10;
+            this.lblScriptsTitle.Text = "SCRIPTS";
+            // 
+            // lvScripts
+            // 
+            this.lvScripts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvScripts.FullRowSelect = true;
+            this.lvScripts.HideSelection = false;
+            this.lvScripts.Location = new System.Drawing.Point(336, 85);
+            this.lvScripts.Name = "lvScripts";
+            this.lvScripts.Size = new System.Drawing.Size(459, 529);
+            this.lvScripts.TabIndex = 9;
+            this.lvScripts.UseCompatibleStateImageBehavior = false;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(877, 630);
+            this.ClientSize = new System.Drawing.Size(807, 664);
+            this.Controls.Add(this.lblScriptsTitle);
+            this.Controls.Add(this.lvScripts);
+            this.Controls.Add(this.lblDatabasesTitle);
             this.Controls.Add(this.lvDatabases);
-            this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.toolbar);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip2);
@@ -316,8 +360,8 @@
             this.panel1.ResumeLayout(false);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.toolbar.ResumeLayout(false);
+            this.toolbar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -346,12 +390,15 @@
         private System.Windows.Forms.ToolStripMenuItem openScriptListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveScriptListToolStripMenuItem;
         public System.Windows.Forms.ListView lvDatabases;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip toolbar;
         private System.Windows.Forms.ToolStripButton toolStripButtonMoveUp;
         private System.Windows.Forms.ToolStripButton toolStripButtonMoveDown;
         private System.Windows.Forms.ToolStripButton toolStripButtonAdd;
         private System.Windows.Forms.ToolStripButton toolStripButtonRemove;
         private System.Windows.Forms.ToolStripButton toolbarBtnEdit;
+        private System.Windows.Forms.Label lblDatabasesTitle;
+        private System.Windows.Forms.Label lblScriptsTitle;
+        public System.Windows.Forms.ListView lvScripts;
     }
 }
 
