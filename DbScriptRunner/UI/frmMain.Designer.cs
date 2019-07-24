@@ -210,12 +210,14 @@
             this.menuLoadScript.Name = "menuLoadScript";
             this.menuLoadScript.Size = new System.Drawing.Size(309, 22);
             this.menuLoadScript.Text = "&Load scripts into this configuration";
+            this.menuLoadScript.Click += new System.EventHandler(this.menuLoadScript_Click);
             // 
             // menuUnloadScript
             // 
             this.menuUnloadScript.Name = "menuUnloadScript";
             this.menuUnloadScript.Size = new System.Drawing.Size(309, 22);
             this.menuUnloadScript.Text = "&Unload selected scripts";
+            this.menuUnloadScript.Click += new System.EventHandler(this.menuUnloadScript_Click);
             // 
             // menuRunScriptsSequentially
             // 

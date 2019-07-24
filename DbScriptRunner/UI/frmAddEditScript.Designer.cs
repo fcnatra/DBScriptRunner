@@ -32,6 +32,7 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
+            this.btnSelectFile = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -70,8 +71,21 @@
             // 
             this.txtName.Location = new System.Drawing.Point(55, 13);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(344, 20);
+            this.txtName.Size = new System.Drawing.Size(316, 20);
             this.txtName.TabIndex = 0;
+            // 
+            // btnSelectFile
+            // 
+            this.btnSelectFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnSelectFile.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSelectFile.Location = new System.Drawing.Point(373, 12);
+            this.btnSelectFile.Name = "btnSelectFile";
+            this.btnSelectFile.Size = new System.Drawing.Size(28, 23);
+            this.btnSelectFile.TabIndex = 3;
+            this.btnSelectFile.Text = "...";
+            this.btnSelectFile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSelectFile.UseVisualStyleBackColor = true;
+            this.btnSelectFile.Click += new System.EventHandler(this.btnSelectFile_Click);
             // 
             // frmAddEditScript
             // 
@@ -79,6 +93,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(413, 82);
+            this.Controls.Add(this.btnSelectFile);
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnOk);
@@ -97,5 +112,6 @@
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.Button btnSelectFile;
     }
 }

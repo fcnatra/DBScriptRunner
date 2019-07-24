@@ -66,5 +66,14 @@ namespace DbScriptRunner.UI
         {
             this.Close();
         }
+
+        private void btnSelectFile_Click(object sender, EventArgs e)
+        {
+            var fullPath = CommonDialogs.SelectFileDialogBox("");
+            if (!string.IsNullOrEmpty(fullPath))
+            {
+                this.txtName.Text = fullPath;
+            }
+        }
     }
 }

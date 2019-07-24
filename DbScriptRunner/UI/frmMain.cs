@@ -79,6 +79,7 @@ namespace DbScriptRunner.UI
 
             CheckScriptConfigIsSaved(e);
         }
+
         private void toolbarMoveUp_Click(object sender, EventArgs e)
         {
             MoveItemUp();
@@ -146,6 +147,16 @@ namespace DbScriptRunner.UI
         private void menuSaveScriptConfiguration_Click(object sender, EventArgs e)
         {
             SaveScripts();
+        }
+
+        private void menuLoadScript_Click(object sender, EventArgs e)
+        {
+            AddNewItem();
+        }
+
+        private void menuUnloadScript_Click(object sender, EventArgs e)
+        {
+            RemoveItem();
         }
 
         private ListView GetFocusedListView()
@@ -331,11 +342,11 @@ namespace DbScriptRunner.UI
             addForm.GetErrorsOnItemInformation = _scriptsAppData.CheckForErrorsOnName;
 
             var dialogResult = addForm.ShowDialog();
-            var databaseList = ((ArrangeableList<INamed>)_databasesAppData.Instances);
+            var scriptList = ((ArrangeableList<INamed>)_scriptsAppData.Instances);
             if (dialogResult == DialogResult.OK)
             {
                 var selectedIndices = focusedListView.SelectedIndices.Cast<int>().ToList();
-                databaseList.Add(addForm.ItemInformation);
+                scriptList.Add(addForm.ItemInformation);
                 PopulateListView(datasource, focusedListView, selectedIndices);
             }
         }

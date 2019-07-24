@@ -14,6 +14,7 @@ namespace DbScriptRunnerLogic
 
         public List<INamed> Load()
         {
+            Items.Clear();
             string data = Repository.Load();
             Items.AddRange(DeserializeItems(data));
             return Items;
