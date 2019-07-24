@@ -10,6 +10,15 @@ namespace DbScriptRunnerLogic
 {
     public class Runner
     {
+        private bool _stopOnAllServers;
+
+        public enum ErrorStrategy
+        {
+            DontStop,
+            StopOnTheServerWhereTheErrorTookPlace,
+            StopOnAllServers,
+        }
+
         public IEnumerable<Database> Databases { get; set; }
 
         public IEnumerable<Script> Scripts { get; set; }
@@ -24,17 +33,39 @@ namespace DbScriptRunnerLogic
 
         public IDatabaseService DatabaseServiceFactory { get; set; }
 
+        public bool ParallelExecution { get; set; } = false;
+
         public List<ExecutionResult> ExecutionResultSummary { get; set; } = new List<ExecutionResult>();
 
         public void Run()
         {
-            foreach (var database in Databases)
+            if (ParallelExecution)
+                RunParallel();
+            else
+                RunSequentially();
+        }
+
+        private void RunSequentially()
+        {
+            foreach (var database in Databases) 
+                RunOnServer(database);
+        }
+
+        private void RunParallel()
+        {
+            Parallel.ForEach(Databases, (database) =>
             {
-                var databaseService = DatabaseServiceFactory.CreateDatabaseService();
-                databaseService.Connect();
-                databaseService.DatabaseInformation = database;
-                databaseService.Disconnect();
-            }
+                RunOnServer(database);
+            });
+        }
+
+        private void RunOnServer(Database database)
+        {
+            var databaseService = DatabaseServiceFactory.CreateDatabaseService();
+            databaseService.DatabaseInformation = database;
+            databaseService.Connect();
+
+            databaseService.Disconnect();
         }
     }
 }
