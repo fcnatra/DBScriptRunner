@@ -12,62 +12,75 @@ namespace DbScriptRunner.Services
 {
     public class AppData<T> where T : INamed, new()
     {
+        public ApplicationStatusBackup StatusBackup { get; set; }
+
+        public DataPersistence<T> Persistence { get; set; } = new DataPersistence<T>();
+
+        public IArrangeableList<INamed> Instances { get; set; }
+
         public AppData()
         {
             StatusBackup = new ApplicationStatusBackup();
+            StatusBackup.StatusBackupPrefix = typeof(T).ToString();
         }
-
-        public ApplicationStatusBackup StatusBackup { get; set; }
 
         public void RecoverLastStatus()
         {
+            var configurationFileName = "";
+            var configurationFileLocation = "";
+
             try
             {
                 StatusBackup.RecoverStatus();
 
-                var dbConfigurationFileName = "";
-                var dbConfigurationFileLocation = "";
-
                 if (StatusBackup.BackupContent.Count > 0)
                 {
-                    dbConfigurationFileName = StatusBackup.BackupContent[0];
-                    dbConfigurationFileLocation = StatusBackup.BackupContent[1];
+                    configurationFileName = StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
+                    configurationFileLocation = StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
                     StatusBackup.BackupContent.Clear();
-                    Load(dbConfigurationFileName, dbConfigurationFileLocation);
+                    Load(configurationFileName, configurationFileLocation);
                 }
+                else
+                    Instances = new ArrangeableList<INamed>();
             }
             catch
             {
-                Debug.WriteLine("Could not load last database status");
+                Debug.WriteLine($"Could not load last configuration status from backup file. " +
+                    $"DATA: Status backup: {StatusBackup.StatusBackupPrefix + StatusBackup.StatusBackupConfigFileName} " +
+                    $"Configuration File Location: {configurationFileLocation} " +
+                    $" Configuration File Name: {configurationFileName}");
             }
         }
 
         public void BackupCurrentStatus()
         {
+            if (RepositoryNameOrRepositoryLocationAreEmpty())
+                return;
+
             StatusBackup.BackupContent.Add(Persistence.Repository.Name);
             StatusBackup.BackupContent.Add(Persistence.Repository.Location);
             StatusBackup.SaveStatus();
         }
 
-        public DataPersistence<T> Persistence { get; set; } = new DataPersistence<T>();
-
-        public IRepositoryInformation RepositoryInformation => Persistence?.Repository;
-
-        public IArrangeableList<INamed> Instances { get; set; }
-
+        private bool RepositoryNameOrRepositoryLocationAreEmpty()
+        {
+            return string.IsNullOrEmpty(Persistence.Repository.Name) || string.IsNullOrEmpty(Persistence.Repository.Location);
+        }
+        
         public void Load(string locationName, string locationPath)
         {
             Persistence.Repository.Name = locationName;
             Persistence.Repository.Location = locationPath;
-            Instances = Persistence.Load();
+            Instances = new ArrangeableList<INamed>();
+            Instances.InitializeWith(Persistence.Load());
         }
 
-        public void Save(string locationName, string locationPath)
+        public void SaveItems(string locationName, string locationPath)
         {
             Persistence.Repository.Name = locationName;
             Persistence.Repository.Location = locationPath;
-            Persistence.Items = Instances;
+            Persistence.Items = (List<INamed>)Instances;
             Persistence.Save();
         }
 
@@ -85,6 +98,5 @@ namespace DbScriptRunner.Services
         {
             return ((ArrangeableList<INamed>)Instances).ListHasChanged;
         }
-
     }
 }

@@ -30,22 +30,20 @@ namespace DbScriptRunner.UI
 
         private void ConfigureLogicDependencies()
         {
-            var fileRepository = new TextFileRepository();
-
             _databasesAppData = new AppData<Database>();
-            _databasesAppData.Persistence.Repository = fileRepository;
+            _databasesAppData.Persistence.Repository = new TextFileRepository();
 
             _scriptsAppData = new AppData<Script>();
-            _scriptsAppData.Persistence.Repository = fileRepository;
+            _scriptsAppData.Persistence.Repository = new TextFileRepository();
         }
 
         private void InitializeControlsDesign()
         {
             InitializeUIForDatabasesListView();
-            PopulateListView(_databasesAppData.Instances, lvDatabases, null, _databasesAppData.RepositoryInformation?.Name);
+            PopulateListView(_databasesAppData.Instances, lvDatabases, null, _databasesAppData.Persistence?.Repository?.Name);
 
             InitializeUIForScriptsListView();
-            PopulateListView(_scriptsAppData.Instances, lvScripts, null, _scriptsAppData.RepositoryInformation?.Name);
+            PopulateListView(_scriptsAppData.Instances, lvScripts, null, _scriptsAppData.Persistence?.Repository?.Name);
         }
 
         private void InitializeUIForScriptsListView()
@@ -108,7 +106,7 @@ namespace DbScriptRunner.UI
 
         private void menuOpenServersConfiguration_Click(object sender, EventArgs e)
         {
-            var destinationInfo = _databasesAppData.RepositoryInformation;
+            var destinationInfo = _databasesAppData.Persistence.Repository;
 
             var fullPath = CommonDialogs.SelectFileDialogBox("", destinationInfo.Location);
             if (!string.IsNullOrEmpty(fullPath))
@@ -337,12 +335,12 @@ namespace DbScriptRunner.UI
 
         private void SaveDatabases()
         {
-            var destinationInfo = _databasesAppData.RepositoryInformation;
+            var destinationInfo = _databasesAppData.Persistence.Repository;
 
             var fullPath = CommonDialogs.SaveToFileDialogBox(destinationInfo.Name, destinationInfo.Location);
             if (!string.IsNullOrEmpty(fullPath))
             {
-                _databasesAppData.Save(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
+                _databasesAppData.SaveItems(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
             }
         }
 

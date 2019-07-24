@@ -1,4 +1,9 @@
-﻿using System;
+﻿using DbScriptRunner.Model;
+using DbScriptRunnerLogic;
+using DbScriptRunnerLogic.Entities;
+using DbScriptRunnerLogic.Interfaces;
+using DbScriptRunnerLogic.Services;
+using System;
 using System.Collections.Generic;
 using System.IO.IsolatedStorage;
 using System.Linq;
@@ -8,63 +13,66 @@ namespace DbScriptRunner.Services
 {
     public class ApplicationStatusBackup
     {
-        private string _statusBackupFileName = "AppStatusBackup.txt";
-        private string _lastOpenedFilesFileName = "LastOpenedFiles.txt";
-
-        public List<string> BackupContent = new List<string>();
+        public enum StatusItem
+        {
+            ConfigurationFileName = 0,
+            ConfigurationFileLocation = 1,
+        }
         
+        public DataPersistence<StatusBackupElement> Persistence { get; set; } = new DataPersistence<StatusBackupElement>();
+
+        public string StatusBackupPrefix { get; set; } = string.Empty;
+
+        public string StatusBackupConfigFileName { get; set; } = "AppStatusBackup.txt";
+
+        public string StatusBackupLastOpenedFiles { get; set; } = "LastOpenedFiles.txt";
+
+        public List<string> BackupContent { get; set; } = new List<string>();
+
+        public string GetWithStatusBackupPrefix(string text) => string.IsNullOrEmpty(StatusBackupPrefix) ? text : $"{StatusBackupPrefix}.{text}";
+        
+        public string this[StatusItem statusItem]
+        {
+            get
+            {
+                return BackupContent[(int)statusItem];
+            }
+        }
+
+        public ApplicationStatusBackup()
+        {
+            this.Persistence.Repository = new IsolatedStorageRepository();
+        }
+
         public void SaveStatus()
         {
-            SaveContentToIsolatedStorage(BackupContent, _statusBackupFileName);
+            Persistence.Items = new List<INamed>();
+            Persistence.Items.AddRange(BackupContent.Select(x => new StatusBackupElement { Name = x }));
+            Persistence.Repository.Name = GetWithStatusBackupPrefix(StatusBackupConfigFileName);
+            Persistence.Save();
         }
 
         public void RecoverStatus()
         {
-            var rowsInContent = LoadContentFromIsolatedStorage(_statusBackupFileName);
+            Persistence.Repository.Name = GetWithStatusBackupPrefix(StatusBackupConfigFileName);
+            var rowsInContent = Persistence.Load();
             BackupContent.Clear();
-            BackupContent.AddRange(rowsInContent);
+            BackupContent.AddRange(rowsInContent.Select(x => x.Name));
         }
 
         public IEnumerable<string> RecoverLastOpenedFiles()
         {
-            var rowsInContent = LoadContentFromIsolatedStorage(_lastOpenedFilesFileName);
-            return rowsInContent.ToList();
+            Persistence.Repository.Name = GetWithStatusBackupPrefix(StatusBackupLastOpenedFiles);
+            var rowsInContent = Persistence.Load();
+            return rowsInContent.Select(x => x.Name);
         }
 
         public void SaveLastOpenedFiles(IEnumerable<string> fileList)
         {
-            SaveContentToIsolatedStorage(fileList, _lastOpenedFilesFileName);
-        }
-
-        private void SaveContentToIsolatedStorage(IEnumerable<string> content, string fileName)
-        {
-            var isoFile = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
-
-            var isoStream = isoFile.OpenFile(fileName, System.IO.FileMode.Create);
-            foreach (var data in content)
-            {
-                var buffer = Encoding.Default.GetBytes(data);
-                isoStream.Write(buffer, 0, data.Length);
-                isoStream.WriteByte(13);
-            }
-            isoStream.Close();
-            isoFile.Close();
-        }
-
-        private IEnumerable<string> LoadContentFromIsolatedStorage(string isoFileName)
-        {
-            var isoFile = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
-            var isoStream = isoFile.OpenFile(isoFileName, System.IO.FileMode.OpenOrCreate);
-            var bufferLength = isoFile.UsedSize;
-            var buffer = new byte[bufferLength];
-
-            isoStream.Read(buffer, 0, (int)bufferLength);
-            isoStream.Close();
-            isoFile.Close();
-
-            string content = Encoding.Default.GetString(buffer);
-            var rowsInContent = content.Split(new char[] { (char)13 });
-            return rowsInContent.Where(row => !string.IsNullOrEmpty(row) && !row.StartsWith("\0"));
+            Persistence.Items = new List<INamed>();
+            Persistence.Items.AddRange(fileList.Select(x => new StatusBackupElement { Name = x }));
+            Persistence.Repository.Name = GetWithStatusBackupPrefix(StatusBackupLastOpenedFiles);
+            Persistence.Save();
         }
     }
 }

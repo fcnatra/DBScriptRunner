@@ -119,55 +119,6 @@ namespace DbScriptRunnerTests
             },
         };
 
-        [TestMethod]
-        public void GivenAPersistedDatabaseList_WhenLoadingListBack_ListIsTheSame()
-        {
-            // GIVEN
-            var databases = (IArrangeableList<INamed>)new ArrangeableList<INamed>()
-            {
-                new Database {Name = "one"},
-                new Database {Name = "two"}
-            };
-            var expectedNumberOfDatabases = databases.Count();
-            string repositoryContent = "";
-
-            var fakeRepository = A.Fake<IRepository>();
-            A.CallTo(() => fakeRepository.Save(A<string>.That.IsNotNull()))
-                .Invokes((x) => repositoryContent = (string)x.Arguments.First());
-            fakeRepository.Location = "c:\\temp";
-            fakeRepository.Name = "testing.txt";
-
-            var dataPersistence = new DbScriptRunnerLogic.DataPersistence<Database>
-            {
-                Repository = fakeRepository
-            };
-
-            var dbAppConfig = new DbScriptRunner.Services.AppData<Database>();
-            dbAppConfig.Instances = databases;
-
-            dbAppConfig.Persistence = dataPersistence;
-            dbAppConfig.Save(fakeRepository.Name, fakeRepository.Location);
-            dbAppConfig.BackupCurrentStatus();
-
-            // WHEN
-            A.CallTo(() => fakeRepository.Load()).Returns(repositoryContent);
-
-            var secondInstanceSameUser = new DbScriptRunner.Services.AppData<Database>();
-            secondInstanceSameUser.Persistence = dataPersistence;
-            secondInstanceSameUser.RecoverLastStatus();
-
-            Assert.AreEqual(expectedNumberOfDatabases, dbAppConfig.Instances.Count());
-            var expectedDatabasesWereFound = true;
-            foreach (var db in dbAppConfig.Instances)
-            {
-                expectedDatabasesWereFound = databases.Any(expectedDb => expectedDb.Name == db.Name);
-                if (!expectedDatabasesWereFound) break;
-            }
-
-            // THEN
-            Assert.IsTrue(expectedDatabasesWereFound);
-        }
-
         [DataTestMethod]
         [DynamicData(nameof(_dataSetsForMoveUpOps))]
         public void GivenAnInputList_MovingUpSelectedIndices_WillEndUpOnExpectedList(ArrangeableList<string> inputList, List<int> indicesToMove, List<string> expectedList)

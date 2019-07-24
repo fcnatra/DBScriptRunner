@@ -2,6 +2,7 @@
 using DbScriptRunnerLogic.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DbScriptRunnerLogic
 {
@@ -9,12 +10,12 @@ namespace DbScriptRunnerLogic
     {
         public IRepository Repository { get; set; }
 
-        public IArrangeableList<INamed> Items { get; set; } = new ArrangeableList<INamed>();
+        public List<INamed> Items { get; set; } = new List<INamed>();
 
-        public IArrangeableList<INamed> Load()
+        public List<INamed> Load()
         {
             string data = Repository.Load();
-            Items.InitializeWith(DeserializeItems(data));
+            Items.AddRange(DeserializeItems(data));
             return Items;
         }
 
@@ -34,11 +35,13 @@ namespace DbScriptRunnerLogic
             return data;
         }
 
-        private ArrangeableList<INamed> DeserializeItems(string data)
+        private List<INamed> DeserializeItems(string data)
         {
-            var dataRows = data.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            var dataRows = data
+                .Split(new string[] { Environment.NewLine }, StringSplitOptions.None)
+                .Where(row => !string.IsNullOrEmpty(row) && !row.StartsWith("\0"));
 
-            var items = new ArrangeableList<INamed>();
+            var items = new List<INamed>();
             foreach (var dataRow in dataRows)
             {
                 if (!string.IsNullOrEmpty(dataRow)) 
