@@ -46,12 +46,15 @@
     <Compile Include="Entities\Script.cs" />
     <Compile Include="Entities\Database.cs" />
     <Compile Include="Interfaces\IArrangeableList.cs" />
+    <Compile Include="Interfaces\IDatabaseService.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IStateFull.cs" />
     <Compile Include="Interfaces\ITargetOfOperations.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runner.cs" />
+    <Compile Include="Services\DatabaseServiceForSql.cs" />
     <Compile Include="Services\IsolatedStorageRepository.cs" />
     <Compile Include="Services\TextFileRepository.cs" />
   </ItemGroup>

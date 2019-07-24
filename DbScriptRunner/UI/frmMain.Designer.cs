@@ -224,6 +224,7 @@
             this.menuRunScriptsSequentially.Name = "menuRunScriptsSequentially";
             this.menuRunScriptsSequentially.Size = new System.Drawing.Size(309, 22);
             this.menuRunScriptsSequentially.Text = "&Run selected scripts on servers - Sequentially";
+            this.menuRunScriptsSequentially.Click += new System.EventHandler(this.menuRunScriptsSequentially_Click);
             // 
             // menuRunScriptsParallel
             // 

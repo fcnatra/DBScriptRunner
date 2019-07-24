@@ -159,6 +159,15 @@ namespace DbScriptRunner.UI
             RemoveItem();
         }
 
+        private void menuRunScriptsSequentially_Click(object sender, EventArgs e)
+        {
+            var runner = new Runner();
+            runner.Databases = (IEnumerable<Database>)_databasesAppData.Instances;
+            runner.Scripts = (IEnumerable<Script>)_scriptsAppData.Instances;
+            runner.DatabaseServiceFactory = new DatabaseServiceForSql();
+            runner.Run();
+        }
+
         private ListView GetFocusedListView()
         {
             if (lvDatabases.Focused) return lvDatabases;

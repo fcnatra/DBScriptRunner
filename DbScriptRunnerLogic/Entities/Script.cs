@@ -4,10 +4,8 @@ using System;
 namespace DbScriptRunnerLogic.Entities
 {
     [Serializable()]
-    public class Script : INamed, ITargetOfOperations
+    public class Script : INamed
     {
-        public string Name { get; set; } = string.Empty;
-
-        public Enums.OperationResult OperationResult { get; set; } = Enums.OperationResult.None;
+        public string Name { get; set; } = string.Empty;        
     }
 }
