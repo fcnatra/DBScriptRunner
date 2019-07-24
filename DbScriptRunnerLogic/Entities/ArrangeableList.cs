@@ -9,6 +9,11 @@ namespace DbScriptRunnerLogic.Entities
     {
         public bool ListHasChanged { get; private set; } = false;
 
+        public void InitializeStatus()
+        {
+            this.ListHasChanged = false;
+        }
+
         public List<int> MoveItemsUpOnePosition(List<int> indicesToMove)
         {
             var movedIndices = new List<int>();

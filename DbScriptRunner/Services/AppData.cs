@@ -82,6 +82,8 @@ namespace DbScriptRunner.Services
             Persistence.Repository.Location = locationPath;
             Persistence.Items = (List<INamed>)Instances;
             Persistence.Save();
+
+            Instances.InitializeStatus();
         }
 
         public List<string> CheckForErrorsOnName(T InstanceInfo)

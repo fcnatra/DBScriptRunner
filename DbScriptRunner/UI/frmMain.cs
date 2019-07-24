@@ -133,7 +133,19 @@ namespace DbScriptRunner.UI
 
         private void menuOpenScriptConfiguration_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented!");
+            var destinationInfo = _scriptsAppData.Persistence.Repository;
+
+            var fullPath = CommonDialogs.SelectFileDialogBox("", destinationInfo.Location);
+            if (!string.IsNullOrEmpty(fullPath))
+            {
+                _scriptsAppData.Load(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
+                PopulateListView(_scriptsAppData.Instances, lvScripts);
+            }
+        }
+
+        private void menuSaveScriptConfiguration_Click(object sender, EventArgs e)
+        {
+            SaveScripts();
         }
 
         private ListView GetFocusedListView()
@@ -346,7 +358,13 @@ namespace DbScriptRunner.UI
 
         private void SaveScripts()
         {
-            throw new NotImplementedException();
+            var destinationInfo = _scriptsAppData.Persistence.Repository;
+
+            var fullPath = CommonDialogs.SaveToFileDialogBox(destinationInfo.Name, destinationInfo.Location);
+            if (!string.IsNullOrEmpty(fullPath))
+            {
+                _scriptsAppData.SaveItems(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
+            }
         }
 
         private void CheckScriptConfigIsSaved(FormClosingEventArgs e)
@@ -364,8 +382,8 @@ namespace DbScriptRunner.UI
                 e.Cancel = true;
                 return;
             }
-            else
-                _scriptsAppData.BackupCurrentStatus();
+
+            _scriptsAppData.BackupCurrentStatus();
         }
 
         private void CheckDatabaseConfigIsSaved(FormClosingEventArgs e)
@@ -383,9 +401,8 @@ namespace DbScriptRunner.UI
                 e.Cancel = true;
                 return;
             }
-            else
-                _databasesAppData.BackupCurrentStatus();
-        }
 
+            _databasesAppData.BackupCurrentStatus();
+        }
     }
 }

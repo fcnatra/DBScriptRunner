@@ -203,6 +203,7 @@
             this.menuSaveScriptConfiguration.Name = "menuSaveScriptConfiguration";
             this.menuSaveScriptConfiguration.Size = new System.Drawing.Size(309, 22);
             this.menuSaveScriptConfiguration.Text = "&Save Script Configuration";
+            this.menuSaveScriptConfiguration.Click += new System.EventHandler(this.menuSaveScriptConfiguration_Click);
             // 
             // menuLoadScript
             // 

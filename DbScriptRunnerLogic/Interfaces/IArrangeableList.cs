@@ -7,5 +7,7 @@ namespace DbScriptRunnerLogic.Interfaces
     public interface IArrangeableList<T> : IEnumerable<T>
     {
         void InitializeWith(IEnumerable<T> elements);
+
+        void InitializeStatus();
     }
 }
