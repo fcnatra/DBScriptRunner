@@ -7,12 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbScriptRunner", "DbScriptR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbScriptRunnerLogic", "DbScriptRunnerLogic\DbScriptRunnerLogic.csproj", "{19BFE1AE-A3AF-4A31-9836-0592D7592D1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbScriptRunnerTests", "DbScriptRunnerTests\DbScriptRunnerTests.csproj", "{59A4BFE6-1A28-4D63-8800-FA37375245D3}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6D6ADB59-F234-4652-9705-6F8B566140EC}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbScriptRunnerDotNetCoreTests", "DbScriptRunnerDotNetCoreTests\DbScriptRunnerDotNetCoreTests.csproj", "{E75FF971-41A5-4D23-A4E9-6B51305A9544}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +28,10 @@ Global
 		{19BFE1AE-A3AF-4A31-9836-0592D7592D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19BFE1AE-A3AF-4A31-9836-0592D7592D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19BFE1AE-A3AF-4A31-9836-0592D7592D1F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59A4BFE6-1A28-4D63-8800-FA37375245D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59A4BFE6-1A28-4D63-8800-FA37375245D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59A4BFE6-1A28-4D63-8800-FA37375245D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59A4BFE6-1A28-4D63-8800-FA37375245D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E75FF971-41A5-4D23-A4E9-6B51305A9544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E75FF971-41A5-4D23-A4E9-6B51305A9544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E75FF971-41A5-4D23-A4E9-6B51305A9544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E75FF971-41A5-4D23-A4E9-6B51305A9544}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
