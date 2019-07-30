@@ -15,6 +15,7 @@
 			  </tr>
 			</xsl:for-each>
 		  </table>
+		  Summary: Total(<xsl:value-of select="/tt:TestRun/tt:ResultSummary/tt:Counters/@total" />) Executed(<xsl:value-of select="/tt:TestRun/tt:ResultSummary/tt:Counters/@executed" />) Passed(<xsl:value-of select="/tt:TestRun/tt:ResultSummary/tt:Counters/@passed" />) Failed(<xsl:value-of select="/tt:TestRun/tt:ResultSummary/tt:Counters/@failed" />) Error(<xsl:value-of select="/tt:TestRun/tt:ResultSummary/tt:Counters/@error" />)
 		</body>
     </html>
   </xsl:template>
