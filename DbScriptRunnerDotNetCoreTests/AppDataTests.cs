@@ -52,7 +52,6 @@ namespace DbScriptRunnerTests
             Assert.AreEqual(expectedFileName, fakeRepository.Name);
         }
 
-
         [TestMethod]
         public void GivenAPersistedDatabaseList_WhenLoadingListBack_ListIsTheSame()
         {
