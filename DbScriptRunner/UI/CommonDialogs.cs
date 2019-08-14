@@ -41,10 +41,5 @@ namespace DbScriptRunner.UI
         {
             MessageBox.Show("Please select an item (only one) in order to proceed", "INFORMATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
-        internal static void TellUserToFocusAListView()
-        {
-            MessageBox.Show("To perform the desired operation, please select either the list with databases or the list with scripts", "INFORMATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
     }
 }

@@ -196,14 +196,10 @@ namespace DbScriptRunner.UI
             lblHeader.Font = new Font(lblHeader.Font, FontStyle.Bold);
         }
 
-        private ListView GetFocusedListView()
+        private ListView GetFocusedListBetweenDatabasesOrScripts()
         {
-            if (lvDatabases.Focused) return lvDatabases;
-            if (lvScripts.Focused) return lvScripts;
-
-            CommonDialogs.TellUserToFocusAListView();
-
-            return null;
+            if (lvDatabases.Focused || lblDatabasesTitle.BackColor == SystemColors.Highlight) return lvDatabases;
+            else return lvScripts;
         }
 
         private void PopulateListView(IArrangeableList<INamed> datasource, ListView listView, List<int> indicesToSelect = null, string lvTitle = "")
@@ -241,7 +237,7 @@ namespace DbScriptRunner.UI
 
         private void RemoveItem()
         {
-            var focusedListView = GetFocusedListView();
+            var focusedListView = GetFocusedListBetweenDatabasesOrScripts();
             if (focusedListView == null) return;
 
             if (!IsThereAnyItemSelected(focusedListView))
@@ -258,7 +254,7 @@ namespace DbScriptRunner.UI
 
         private void MoveItemDown()
         {
-            ListView focusedListView = GetFocusedListView();
+            ListView focusedListView = GetFocusedListBetweenDatabasesOrScripts();
             if (focusedListView == null) return;
 
             if (!IsThereAnyItemSelected(focusedListView))
@@ -275,7 +271,7 @@ namespace DbScriptRunner.UI
 
         private void MoveItemUp()
         {
-            ListView focusedListView = GetFocusedListView();
+            ListView focusedListView = GetFocusedListBetweenDatabasesOrScripts();
             if (focusedListView == null) return;
 
             if (!IsThereAnyItemSelected(focusedListView))
@@ -292,7 +288,7 @@ namespace DbScriptRunner.UI
 
         private void EditSelectedItem()
         {
-            ListView focusedListView = GetFocusedListView();
+            ListView focusedListView = GetFocusedListBetweenDatabasesOrScripts();
             if (focusedListView == null) return;
 
             if (focusedListView.SelectedIndices.Count != 1)
@@ -341,14 +337,8 @@ namespace DbScriptRunner.UI
 
         private void AddNewItem()
         {
-            ListView focusedListView = GetFocusedListView();
+            ListView focusedListView = GetFocusedListBetweenDatabasesOrScripts();
             if (focusedListView == null) return;
-
-            if (focusedListView.SelectedIndices.Count != 1)
-            {
-                CommonDialogs.TellUserToSelectJustOneItem();
-                return;
-            }
 
             if (focusedListView == lvDatabases) AddNewDatabaseItem(focusedListView);
             else AddNewScriptItem(focusedListView);
