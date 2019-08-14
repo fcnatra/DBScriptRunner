@@ -5,6 +5,7 @@ using DbScriptRunnerLogic.Interfaces;
 using DbScriptRunnerLogic.Services;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -44,6 +45,8 @@ namespace DbScriptRunner.UI
 
             InitializeUIForScriptsListView();
             PopulateListView(_scriptsAppData.Instances, lvScripts, null, _scriptsAppData.Persistence?.Repository?.Name);
+
+            HighlightListViewHeader(lvDatabases);
         }
 
         private void InitializeUIForScriptsListView()
@@ -166,6 +169,31 @@ namespace DbScriptRunner.UI
             runner.Scripts = (IEnumerable<Script>)_scriptsAppData.Instances;
             runner.DatabaseServiceFactory = new DatabaseServiceForSql();
             runner.Run();
+        }
+
+        private void listViewConfiguration_Enter(object sender, EventArgs e)
+        {
+            var focusedListView = (ListView)sender;
+            var listViewToUnfocus = (focusedListView.Name == lvDatabases.Name) ? lvScripts : lvDatabases;
+
+            HighlightListViewHeader((ListView)sender);
+            UnHighlightListViewHeader(listViewToUnfocus);
+        }
+
+        private void UnHighlightListViewHeader(ListView unfocusedListView)
+        {
+            var lblHeader = (unfocusedListView.Name == lvDatabases.Name) ? lblDatabasesTitle : lblScriptsTitle;
+            lblHeader.BackColor = SystemColors.ControlLight;
+            lblHeader.ForeColor = SystemColors.WindowText;
+            lblHeader.Font = new Font(lblHeader.Font, FontStyle.Regular);
+        }
+
+        private void HighlightListViewHeader(ListView focusedListView)
+        {
+            var lblHeader = (focusedListView.Name == lvDatabases.Name) ? lblDatabasesTitle : lblScriptsTitle;
+            lblHeader.BackColor = SystemColors.Highlight;
+            lblHeader.ForeColor = SystemColors.HighlightText;
+            lblHeader.Font = new Font(lblHeader.Font, FontStyle.Bold);
         }
 
         private ListView GetFocusedListView()

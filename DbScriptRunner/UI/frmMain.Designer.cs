@@ -243,6 +243,7 @@
             this.lvDatabases.Size = new System.Drawing.Size(318, 529);
             this.lvDatabases.TabIndex = 6;
             this.lvDatabases.UseCompatibleStateImageBehavior = false;
+            this.lvDatabases.Enter += new System.EventHandler(this.listViewConfiguration_Enter);
             // 
             // toolbar
             // 
@@ -311,6 +312,7 @@
             // 
             this.lblDatabasesTitle.BackColor = System.Drawing.SystemColors.ControlLight;
             this.lblDatabasesTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblDatabasesTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDatabasesTitle.Location = new System.Drawing.Point(13, 60);
             this.lblDatabasesTitle.Name = "lblDatabasesTitle";
             this.lblDatabasesTitle.Size = new System.Drawing.Size(317, 22);
@@ -324,6 +326,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblScriptsTitle.BackColor = System.Drawing.SystemColors.ControlLight;
             this.lblScriptsTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblScriptsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblScriptsTitle.Location = new System.Drawing.Point(337, 60);
             this.lblScriptsTitle.Name = "lblScriptsTitle";
             this.lblScriptsTitle.Size = new System.Drawing.Size(458, 22);
@@ -343,6 +346,7 @@
             this.lvScripts.Size = new System.Drawing.Size(459, 529);
             this.lvScripts.TabIndex = 9;
             this.lvScripts.UseCompatibleStateImageBehavior = false;
+            this.lvScripts.Enter += new System.EventHandler(this.listViewConfiguration_Enter);
             // 
             // frmMain
             // 
