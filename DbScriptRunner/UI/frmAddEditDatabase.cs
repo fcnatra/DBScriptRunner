@@ -31,7 +31,7 @@ namespace DbScriptRunner.UI
 
         public delegate IEnumerable<string> Delegate_GetErrorsOnDatabaseInformation(Database proposedDatabaseInfo);
 
-        public Delegate_GetErrorsOnDatabaseInformation GetErrorsOnDatabaseInformation { get; set; }
+        public Delegate_GetErrorsOnDatabaseInformation MethodToGetErrorsOnItemInformation { get; set; }
 
         public frmAddEditDatabase()
         {
@@ -51,9 +51,9 @@ namespace DbScriptRunner.UI
                 Name = this.txtName.Text
             };
 
-            if (GetErrorsOnDatabaseInformation != null)
+            if (MethodToGetErrorsOnItemInformation != null)
             {
-                var errorList = GetErrorsOnDatabaseInformation(databaseInfo);
+                var errorList = MethodToGetErrorsOnItemInformation(databaseInfo);
                 if (errorList.Any())
                 {
                     var message = string.Empty;

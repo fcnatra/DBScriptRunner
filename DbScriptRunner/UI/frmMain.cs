@@ -306,7 +306,7 @@ namespace DbScriptRunner.UI
             var datasource = (ArrangeableList<INamed>)focusedListView.Tag;
 
             var editForm = new frmAddEditScript();
-            editForm.GetErrorsOnItemInformation = _scriptsAppData.CheckForErrorsOnName;
+            editForm.MethodToGetErrorsOnItemInformation = _scriptsAppData.CheckForErrorsOnName;
             editForm.ItemInformation = (Script)focusedListView.SelectedItems[0].Tag;
 
             var dialogResult = editForm.ShowDialog();
@@ -323,7 +323,7 @@ namespace DbScriptRunner.UI
             var datasource = (ArrangeableList<INamed>)focusedListView.Tag;
 
             var editForm = new frmAddEditDatabase();
-            editForm.GetErrorsOnDatabaseInformation = _databasesAppData.CheckForErrorsOnName;
+            editForm.MethodToGetErrorsOnItemInformation = _databasesAppData.CheckForErrorsOnName;
             editForm.DatabaseInformation = (Database)focusedListView.SelectedItems[0].Tag;
 
             var dialogResult = editForm.ShowDialog();
@@ -346,35 +346,43 @@ namespace DbScriptRunner.UI
 
         private void AddNewDatabaseItem(ListView focusedListView)
         {
-            var datasource = (ArrangeableList<INamed>)focusedListView.Tag;
-
             var addForm = new frmAddEditDatabase();
-            addForm.GetErrorsOnDatabaseInformation = _databasesAppData.CheckForErrorsOnName;
-
+            addForm.MethodToGetErrorsOnItemInformation = _databasesAppData.CheckForErrorsOnName;
             var dialogResult = addForm.ShowDialog();
-            var databaseList = ((ArrangeableList<INamed>)_databasesAppData.Instances);
+
             if (dialogResult == DialogResult.OK)
             {
-                var selectedIndices = focusedListView.SelectedIndices.Cast<int>().ToList();
+                var databaseList = ((ArrangeableList<INamed>)_databasesAppData.Instances);
+                if (databaseList == null)
+                {
+                    databaseList = new ArrangeableList<INamed>();
+                    _databasesAppData.Instances = databaseList;
+                }
                 databaseList.Add(addForm.DatabaseInformation);
-                PopulateListView(datasource, focusedListView, selectedIndices);
+
+                var selectedIndices = focusedListView.SelectedIndices.Cast<int>().ToList();
+                PopulateListView(databaseList, focusedListView, selectedIndices);
             }
         }
 
         private void AddNewScriptItem(ListView focusedListView)
         {
-            var datasource = (ArrangeableList<INamed>)focusedListView.Tag;
-
             var addForm = new frmAddEditScript();
-            addForm.GetErrorsOnItemInformation = _scriptsAppData.CheckForErrorsOnName;
-
+            addForm.MethodToGetErrorsOnItemInformation = _scriptsAppData.CheckForErrorsOnName;
             var dialogResult = addForm.ShowDialog();
-            var scriptList = ((ArrangeableList<INamed>)_scriptsAppData.Instances);
+
             if (dialogResult == DialogResult.OK)
             {
-                var selectedIndices = focusedListView.SelectedIndices.Cast<int>().ToList();
+                var scriptList = ((ArrangeableList<INamed>)_scriptsAppData.Instances);
+                if (scriptList == null)
+                {
+                    scriptList = new ArrangeableList<INamed>();
+                    _scriptsAppData.Instances = scriptList;
+                }
                 scriptList.Add(addForm.ItemInformation);
-                PopulateListView(datasource, focusedListView, selectedIndices);
+
+                var selectedIndices = focusedListView.SelectedIndices.Cast<int>().ToList();
+                PopulateListView(scriptList, focusedListView, selectedIndices);
             }
         }
 

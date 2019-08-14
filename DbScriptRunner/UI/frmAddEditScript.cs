@@ -26,7 +26,7 @@ namespace DbScriptRunner.UI
 
         public delegate IEnumerable<string> Delegate_GetErrorsOnItemInformation(Script proposedDatabaseInfo);
 
-        public Delegate_GetErrorsOnItemInformation GetErrorsOnItemInformation { get; set; }
+        public Delegate_GetErrorsOnItemInformation MethodToGetErrorsOnItemInformation { get; set; }
 
         public frmAddEditScript()
         {
@@ -46,9 +46,9 @@ namespace DbScriptRunner.UI
                 Name = this.txtName.Text
             };
 
-            if (GetErrorsOnItemInformation != null)
+            if (MethodToGetErrorsOnItemInformation != null)
             {
-                var errorList = GetErrorsOnItemInformation(databaseInfo);
+                var errorList = MethodToGetErrorsOnItemInformation(databaseInfo);
                 if (errorList.Any())
                 {
                     var message = string.Empty;
