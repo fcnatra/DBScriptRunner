@@ -1,0 +1,17 @@
+{
+  "$schema": "ReportPortal.config.schema",
+  "enabled": true,
+  "server": {
+    "url": "http://192.168.40.64/api/v1/",
+    "project": "dbscriptrunner",
+    "authentication": {
+      "uuid": "30c6b9d8-7abf-4a31-a601-788f45260a2c"
+    }
+  },
+  "launch": {
+    "name": "DBScriptRunner DotNet Core Tests",
+    "description": "-",
+    "debugMode": true,
+    "tags": [".net", "core"]
+  }
+}
