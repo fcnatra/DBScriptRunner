@@ -7,15 +7,20 @@ namespace DbScriptRunner.UI
     {
         public static string SelectFileDialogBox(string defaultFileName, string initialDirectory = "")
         {
-            return ShowDialog(new OpenFileDialog(), defaultFileName, initialDirectory);
+            return ShowFileDialog(new OpenFileDialog(), defaultFileName, initialDirectory);
         }
 
         public static string SaveToFileDialogBox(string defaultFileName, string initialDirectory = "")
         {
-            return ShowDialog(new SaveFileDialog(), defaultFileName, initialDirectory);
+            return ShowFileDialog(new SaveFileDialog(), defaultFileName, initialDirectory);
         }
 
-        private static string ShowDialog(FileDialog fileDialog, string defaultFileName, string initialDirectory)
+        public static DialogResult AreYouSure(string dialogTitle = "PLEASE CONFIRM")
+        {
+            return MessageBox.Show("Are you sure?", dialogTitle, MessageBoxButtons.YesNo);
+        }
+
+        private static string ShowFileDialog(FileDialog fileDialog, string defaultFileName, string initialDirectory)
         {
             string fullPath = null;
 
@@ -30,7 +35,6 @@ namespace DbScriptRunner.UI
             }
             return fullPath;
         }
-
 
         public static void TellUserToSelectItemsInOrderToMove()
         {

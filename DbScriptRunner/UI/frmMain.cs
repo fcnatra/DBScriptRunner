@@ -399,7 +399,18 @@ namespace DbScriptRunner.UI
             var dbName = _databasesAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
             var dbLocation = _databasesAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
-            var fullPath = CommonDialogs.SaveToFileDialogBox(dbName, dbLocation);
+            string fullPath = string.Empty;
+
+            if (string.IsNullOrEmpty(dbName))
+            {
+                fullPath = CommonDialogs.SaveToFileDialogBox(dbName, dbLocation);
+            }
+            else
+            {
+                if (CommonDialogs.AreYouSure("SAVE FILE") == DialogResult.Yes)
+                    fullPath = Path.Combine(dbLocation, dbName);
+            }
+
             if (!string.IsNullOrEmpty(fullPath))
             {
                 _databasesAppData.SaveItems(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
