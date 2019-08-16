@@ -46,10 +46,10 @@ namespace DbScriptRunner.UI
         private void InitializeControlsDesign()
         {
             InitializeUIForDatabasesListView();
-            PopulateListView(_databasesAppData.Instances, lvDatabases, null, _databasesAppData.Persistence?.Repository?.Name);
+            PopulateListView(_databasesAppData.Instances, lvDatabases, null);
 
             InitializeUIForScriptsListView();
-            PopulateListView(_scriptsAppData.Instances, lvScripts, null, _scriptsAppData.Persistence?.Repository?.Name);
+            PopulateListView(_scriptsAppData.Instances, lvScripts, null);
 
             HighlightListViewHeader(lvDatabases);
         }
@@ -115,9 +115,9 @@ namespace DbScriptRunner.UI
 
         private void menuOpenServersConfiguration_Click(object sender, EventArgs e)
         {
-            var destinationInfo = _databasesAppData.Persistence.Repository;
+            var folderToOpen = _databasesAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
-            var fullPath = CommonDialogs.SelectFileDialogBox("", destinationInfo.Location);
+            var fullPath = CommonDialogs.SelectFileDialogBox("", folderToOpen);
             if (!string.IsNullOrEmpty(fullPath))
             {
                 _databasesAppData.Load(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
@@ -142,9 +142,9 @@ namespace DbScriptRunner.UI
 
         private void menuOpenScriptConfiguration_Click(object sender, EventArgs e)
         {
-            var destinationInfo = _scriptsAppData.Persistence.Repository;
+            var folderToOpen = _scriptsAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
-            var fullPath = CommonDialogs.SelectFileDialogBox("", destinationInfo.Location);
+            var fullPath = CommonDialogs.SelectFileDialogBox("", folderToOpen);
             if (!string.IsNullOrEmpty(fullPath))
             {
                 _scriptsAppData.Load(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
@@ -207,7 +207,7 @@ namespace DbScriptRunner.UI
             else return lvScripts;
         }
 
-        private void PopulateListView(IArrangeableList<INamed> datasource, ListView listView, List<int> indicesToSelect = null, string lvTitle = "")
+        private void PopulateListView(IArrangeableList<INamed> datasource, ListView listView, List<int> indicesToSelect = null)
         {
             listView.Items.Clear();
 
@@ -225,8 +225,6 @@ namespace DbScriptRunner.UI
             }
 
             SelectIndicesOnListView(listView, indicesToSelect);
-
-            if (!string.IsNullOrEmpty(lvTitle)) listView.Text = lvTitle.ToUpper();
 
             listView.ResumeLayout();
         }
@@ -398,9 +396,10 @@ namespace DbScriptRunner.UI
 
         private void SaveDatabases()
         {
-            var destinationInfo = _databasesAppData.Persistence.Repository;
+            var dbName = _databasesAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
+            var dbLocation = _databasesAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
-            var fullPath = CommonDialogs.SaveToFileDialogBox(destinationInfo.Name, destinationInfo.Location);
+            var fullPath = CommonDialogs.SaveToFileDialogBox(dbName, dbLocation);
             if (!string.IsNullOrEmpty(fullPath))
             {
                 _databasesAppData.SaveItems(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
@@ -409,9 +408,10 @@ namespace DbScriptRunner.UI
 
         private void SaveScripts()
         {
-            var destinationInfo = _scriptsAppData.Persistence.Repository;
+            var scriptName = _scriptsAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
+            var scriptLocation = _scriptsAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
-            var fullPath = CommonDialogs.SaveToFileDialogBox(destinationInfo.Name, destinationInfo.Location);
+            var fullPath = CommonDialogs.SaveToFileDialogBox(scriptName, scriptLocation);
             if (!string.IsNullOrEmpty(fullPath))
             {
                 _scriptsAppData.SaveItems(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));

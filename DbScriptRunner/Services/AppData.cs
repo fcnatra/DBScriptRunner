@@ -16,7 +16,7 @@ namespace DbScriptRunner.Services
 
         public DataPersistence<T> Persistence { get; set; } = new DataPersistence<T>();
 
-        public IArrangeableList<INamed> Instances { get; set; }
+        public IArrangeableList<INamed> Instances { get; set; } = new ArrangeableList<INamed>();
 
         public AppData()
         {
@@ -38,7 +38,6 @@ namespace DbScriptRunner.Services
                     configurationFileName = StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
                     configurationFileLocation = StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
-                    StatusBackup.BackupContent.Clear();
                     Load(configurationFileName, configurationFileLocation);
                 }
                 else
@@ -75,8 +74,9 @@ namespace DbScriptRunner.Services
         {
             Persistence.Repository.Name = locationName;
             Persistence.Repository.Location = locationPath;
-            Instances = new ArrangeableList<INamed>();
-            Instances.InitializeWith(Persistence.Load());
+            List<INamed> dataForInstances = Persistence.Load();
+
+            Instances.InitializeWith(dataForInstances);
         }
 
         public void SaveItems(string locationName, string locationPath)

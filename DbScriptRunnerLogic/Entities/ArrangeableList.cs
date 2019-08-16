@@ -68,7 +68,7 @@ namespace DbScriptRunnerLogic.Entities
         {
             this.Clear();
             this.AddRange(elements);
-            this.ListHasChanged = false;
+            this.InitializeStatus();
         }
 
         public List<int> MoveItemsDownOnePosition(List<int> indicesToMove)
