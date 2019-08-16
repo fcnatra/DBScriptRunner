@@ -37,6 +37,13 @@ namespace DbScriptRunner.Services
             {
                 return BackupContent[(int)statusItem];
             }
+
+            set
+            {
+                if (!BackupContent.Any()) BackupContent.AddRange(Enumerable.Repeat(string.Empty, Enum.GetNames(typeof(StatusItem)).Count()).ToList());
+
+                BackupContent[(int)statusItem] = value;
+            }
         }
 
         public ApplicationStatusBackup()

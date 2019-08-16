@@ -23,10 +23,15 @@ namespace DbScriptRunner.UI
 
             ConfigureLogicDependencies();
 
-            _databasesAppData.RecoverLastStatus();
-            _scriptsAppData.RecoverLastStatus();
+            RecoverLastStatus();
 
             InitializeControlsDesign();
+        }
+
+        private void RecoverLastStatus()
+        {
+            _databasesAppData.RecoverLastStatus();
+            _scriptsAppData.RecoverLastStatus();
         }
 
         private void ConfigureLogicDependencies()

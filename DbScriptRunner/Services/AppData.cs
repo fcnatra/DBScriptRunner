@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DbScriptRunner.Services
 {
     public class AppData<T> where T : INamed, new()
     {
+        private const string DEFAULT_CONFIGURATION_NAME = "NewConfiguration.txt";
+
         public ApplicationStatusBackup StatusBackup { get; set; }
 
         public DataPersistence<T> Persistence { get; set; } = new DataPersistence<T>();
@@ -50,6 +50,9 @@ namespace DbScriptRunner.Services
                     $"DATA: Status backup: {StatusBackup.StatusBackupPrefix + StatusBackup.StatusBackupConfigFileName} " +
                     $"Configuration File Location: {configurationFileLocation} " +
                     $" Configuration File Name: {configurationFileName}");
+
+                StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = DEFAULT_CONFIGURATION_NAME;
+                StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             }
         }
 
@@ -58,8 +61,8 @@ namespace DbScriptRunner.Services
             if (RepositoryNameOrRepositoryLocationAreEmpty())
                 return;
 
-            StatusBackup.BackupContent.Add(Persistence.Repository.Name);
-            StatusBackup.BackupContent.Add(Persistence.Repository.Location);
+            StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = Persistence.Repository.Name;
+            StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = Persistence.Repository.Location;
             StatusBackup.SaveStatus();
         }
 
