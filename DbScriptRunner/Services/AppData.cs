@@ -4,6 +4,7 @@ using DbScriptRunnerLogic.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace DbScriptRunner.Services
@@ -12,7 +13,7 @@ namespace DbScriptRunner.Services
     {
         private const string DEFAULT_CONFIGURATION_NAME = "NewConfiguration.txt";
 
-        public ApplicationStatusBackup StatusBackup { get; set; }
+        public ApplicationStatusBackup Status { get; set; }
 
         public DataPersistence<T> Persistence { get; set; } = new DataPersistence<T>();
 
@@ -20,8 +21,8 @@ namespace DbScriptRunner.Services
 
         public AppData()
         {
-            StatusBackup = new ApplicationStatusBackup();
-            StatusBackup.StatusBackupPrefix = typeof(T).ToString();
+            Status = new ApplicationStatusBackup();
+            Status.StatusBackupPrefix = typeof(T).ToString();
         }
 
         public void RecoverLastStatus()
@@ -31,14 +32,14 @@ namespace DbScriptRunner.Services
 
             try
             {
-                StatusBackup.RecoverStatus();
+                Status.RecoverStatus();
 
-                if (StatusBackup.BackupContent.Count > 0)
+                if (Status.BackupContent.Count > 0)
                 {
-                    configurationFileName = StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
-                    configurationFileLocation = StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
+                    configurationFileName = Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
+                    configurationFileLocation = Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
-                    Load(configurationFileName, configurationFileLocation);
+                    Load(configurationFileLocation, configurationFileName);
                 }
                 else
                     Instances = new ArrangeableList<INamed>();
@@ -46,12 +47,12 @@ namespace DbScriptRunner.Services
             catch
             {
                 Debug.WriteLine($"Could not load last configuration status from backup file. " +
-                    $"DATA: Status backup: {StatusBackup.StatusBackupPrefix + StatusBackup.StatusBackupConfigFileName} " +
+                    $"DATA: Status backup: {Status.StatusBackupPrefix + Status.StatusBackupConfigFileName} " +
                     $"Configuration File Location: {configurationFileLocation} " +
                     $" Configuration File Name: {configurationFileName}");
 
-                StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = DEFAULT_CONFIGURATION_NAME;
-                StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = DEFAULT_CONFIGURATION_NAME;
+                Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             }
         }
 
@@ -60,9 +61,9 @@ namespace DbScriptRunner.Services
             if (RepositoryNameOrRepositoryLocationAreEmpty())
                 return;
 
-            StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = Persistence.Repository.Name;
-            StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = Persistence.Repository.Location;
-            StatusBackup.SaveStatus();
+            Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = Persistence.Repository.Name;
+            Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = Persistence.Repository.Location;
+            Status.SaveStatus();
         }
 
         private bool RepositoryNameOrRepositoryLocationAreEmpty()
@@ -70,13 +71,22 @@ namespace DbScriptRunner.Services
             return string.IsNullOrEmpty(Persistence.Repository.Name) || string.IsNullOrEmpty(Persistence.Repository.Location);
         }
         
-        public void Load(string locationName, string locationPath)
+        public void Load(string locationPath, string locationName)
         {
             Persistence.Repository.Name = locationName;
             Persistence.Repository.Location = locationPath;
+
             List<INamed> dataForInstances = Persistence.Load();
 
             Instances.InitializeWith(dataForInstances);
+
+            Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = locationName;
+            Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = locationPath;
+        }
+
+        public void Load(string fullFileName)
+        {
+            Load(Path.GetDirectoryName(fullFileName), Path.GetFileName(fullFileName));
         }
 
         public void SaveItems(string locationName, string locationPath)

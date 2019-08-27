@@ -97,6 +97,24 @@ namespace DbScriptRunnerTests
 
             Assert.IsTrue(expectedDatabasesWereFound);
         }
+
+        [TestMethod]
+        public void OpeningAnExistingScriptConfigFile_WhenSaving_SameFileNameAndPathWillBeUsed()
+        {
+            var expectedPath = "expectedPath";
+            var expectedFileName = "expectedFileName";
+
+            IRepository fakeRepository = A.Fake<IRepository>();
+            A.CallTo(() => fakeRepository.Load()).Returns("fakeContent");
+
+            var scriptsAppData = new AppData<Script>();
+            scriptsAppData.Persistence.Repository = fakeRepository;
+
+            scriptsAppData.Load(expectedPath, expectedFileName);
+
+            Assert.AreEqual(expectedFileName, scriptsAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName]);
+            Assert.AreEqual(expectedPath, scriptsAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation]);
+        }
     }
 }
 

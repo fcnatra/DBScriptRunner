@@ -115,19 +115,19 @@ namespace DbScriptRunner.UI
 
         private void menuOpenServersConfiguration_Click(object sender, EventArgs e)
         {
-            var folderToOpen = _databasesAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
+            var folderToOpen = _databasesAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
             var fullPath = CommonDialogs.SelectFileDialogBox("", folderToOpen);
             if (!string.IsNullOrEmpty(fullPath))
             {
-                _databasesAppData.Load(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
+                _databasesAppData.Load(fullPath);
                 PopulateListView(_databasesAppData.Instances, lvDatabases);
             }
         }
 
         private void menuSaveServersConfiguration_Click(object sender, EventArgs e)
         {
-            SaveDatabases();
+            SaveDatabaseConfigurationFile();
         }
 
         private void addServerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -142,19 +142,12 @@ namespace DbScriptRunner.UI
 
         private void menuOpenScriptConfiguration_Click(object sender, EventArgs e)
         {
-            var folderToOpen = _scriptsAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
-
-            var fullPath = CommonDialogs.SelectFileDialogBox("", folderToOpen);
-            if (!string.IsNullOrEmpty(fullPath))
-            {
-                _scriptsAppData.Load(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
-                PopulateListView(_scriptsAppData.Instances, lvScripts);
-            }
+            LoadScriptConfigurationFile();
         }
 
         private void menuSaveScriptConfiguration_Click(object sender, EventArgs e)
         {
-            SaveScripts();
+            SaveScriptConfigurationFile();
         }
 
         private void menuLoadScript_Click(object sender, EventArgs e)
@@ -394,10 +387,10 @@ namespace DbScriptRunner.UI
             return listView.SelectedItems.Count > 0;
         }
 
-        private void SaveDatabases()
+        private void SaveDatabaseConfigurationFile()
         {
-            var dbName = _databasesAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
-            var dbLocation = _databasesAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
+            var dbName = _databasesAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
+            var dbLocation = _databasesAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
             string fullPath = string.Empty;
 
@@ -417,10 +410,22 @@ namespace DbScriptRunner.UI
             }
         }
 
-        private void SaveScripts()
+        private void LoadScriptConfigurationFile()
         {
-            var scriptName = _scriptsAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
-            var scriptLocation = _scriptsAppData.StatusBackup[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
+            var folderToOpen = _scriptsAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
+
+            var fullPath = CommonDialogs.SelectFileDialogBox("", folderToOpen);
+            if (!string.IsNullOrEmpty(fullPath))
+            {
+                _scriptsAppData.Load(fullPath);
+                PopulateListView(_scriptsAppData.Instances, lvScripts);
+            }
+        }
+
+        private void SaveScriptConfigurationFile()
+        {
+            var scriptName = _scriptsAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
+            var scriptLocation = _scriptsAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
             var fullPath = CommonDialogs.SaveToFileDialogBox(scriptName, scriptLocation);
             if (!string.IsNullOrEmpty(fullPath))
@@ -436,7 +441,7 @@ namespace DbScriptRunner.UI
             {
                 dialogResult = MessageBox.Show("Script configuration has changed. Want to save the current list?", "CONTENT HAVE CHANGED", MessageBoxButtons.YesNoCancel);
                 if (dialogResult == DialogResult.Yes)
-                    SaveScripts();
+                    SaveScriptConfigurationFile();
             }
 
             if (dialogResult == DialogResult.Cancel)
@@ -455,7 +460,7 @@ namespace DbScriptRunner.UI
             {
                 dialogResult = MessageBox.Show("Databases changed. Want to save the current list?", "CONTENT HAVE CHANGED", MessageBoxButtons.YesNoCancel);
                 if (dialogResult == DialogResult.Yes)
-                    SaveDatabases();
+                    SaveDatabaseConfigurationFile();
             }
 
             if (dialogResult == DialogResult.Cancel)
