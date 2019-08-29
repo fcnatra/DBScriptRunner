@@ -59,6 +59,7 @@
             this.lblScriptsTitle = new System.Windows.Forms.Label();
             this.lvScripts = new System.Windows.Forms.ListView();
             this.menuCreateNewServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCreateNewScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -184,6 +185,7 @@
             this.scriptsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuOpenScriptConfiguration,
             this.menuSaveScriptConfiguration,
+            this.menuCreateNewScriptConfiguration,
             this.menuLoadScript,
             this.menuRunScriptsSequentially,
             this.menuRunScriptsParallel});
@@ -195,14 +197,14 @@
             // 
             this.menuOpenScriptConfiguration.Name = "menuOpenScriptConfiguration";
             this.menuOpenScriptConfiguration.Size = new System.Drawing.Size(309, 22);
-            this.menuOpenScriptConfiguration.Text = "&Open Script Configuration";
+            this.menuOpenScriptConfiguration.Text = "&Open Configuration";
             this.menuOpenScriptConfiguration.Click += new System.EventHandler(this.menuOpenScriptConfiguration_Click);
             // 
             // menuSaveScriptConfiguration
             // 
             this.menuSaveScriptConfiguration.Name = "menuSaveScriptConfiguration";
             this.menuSaveScriptConfiguration.Size = new System.Drawing.Size(309, 22);
-            this.menuSaveScriptConfiguration.Text = "&Save Script Configuration";
+            this.menuSaveScriptConfiguration.Text = "&Save Configuration";
             this.menuSaveScriptConfiguration.Click += new System.EventHandler(this.menuSaveScriptConfiguration_Click);
             // 
             // menuLoadScript
@@ -350,6 +352,13 @@
             this.menuCreateNewServersConfiguration.Text = "Create &New Configuration";
             this.menuCreateNewServersConfiguration.Click += new System.EventHandler(this.menuCreateNewServersConfiguration_Click);
             // 
+            // menuCreateNewScriptConfiguration
+            // 
+            this.menuCreateNewScriptConfiguration.Name = "menuCreateNewScriptConfiguration";
+            this.menuCreateNewScriptConfiguration.Size = new System.Drawing.Size(309, 22);
+            this.menuCreateNewScriptConfiguration.Text = "Create &New Configuration";
+            this.menuCreateNewScriptConfiguration.Click += new System.EventHandler(this.menuCreateNewScriptConfiguration_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -412,6 +421,7 @@
         private System.Windows.Forms.Label lblScriptsTitle;
         public System.Windows.Forms.ListView lvScripts;
         private System.Windows.Forms.ToolStripMenuItem menuCreateNewServersConfiguration;
+        private System.Windows.Forms.ToolStripMenuItem menuCreateNewScriptConfiguration;
     }
 }
 

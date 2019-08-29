@@ -186,8 +186,14 @@ namespace DbScriptRunner.UI
 
         private void menuCreateNewServersConfiguration_Click(object sender, EventArgs e)
         {
-            this._databasesAppData.CreateNew();
-            PopulateListView(this._databasesAppData.Instances, lvDatabases);
+            _databasesAppData.CreateNew();
+            PopulateListView(_databasesAppData.Instances, lvDatabases);
+        }
+
+        private void menuCreateNewScriptConfiguration_Click(object sender, EventArgs e)
+        {
+            _scriptsAppData.CreateNew();
+            PopulateListView(_scriptsAppData.Instances, lvScripts);
         }
 
         private void UnHighlightListViewHeader(ListView unfocusedListView)
