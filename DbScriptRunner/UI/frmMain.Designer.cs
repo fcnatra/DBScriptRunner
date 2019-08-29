@@ -46,7 +46,6 @@
             this.menuOpenScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSaveScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLoadScript = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuUnloadScript = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRunScriptsSequentially = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRunScriptsParallel = new System.Windows.Forms.ToolStripMenuItem();
             this.lvDatabases = new System.Windows.Forms.ListView();
@@ -184,7 +183,6 @@
             this.menuOpenScriptConfiguration,
             this.menuSaveScriptConfiguration,
             this.menuLoadScript,
-            this.menuUnloadScript,
             this.menuRunScriptsSequentially,
             this.menuRunScriptsParallel});
             this.scriptsToolStripMenuItem.Name = "scriptsToolStripMenuItem";
@@ -212,13 +210,6 @@
             this.menuLoadScript.Text = "&Load scripts into this configuration";
             this.menuLoadScript.Click += new System.EventHandler(this.menuLoadScript_Click);
             // 
-            // menuUnloadScript
-            // 
-            this.menuUnloadScript.Name = "menuUnloadScript";
-            this.menuUnloadScript.Size = new System.Drawing.Size(309, 22);
-            this.menuUnloadScript.Text = "&Unload selected scripts";
-            this.menuUnloadScript.Click += new System.EventHandler(this.menuUnloadScript_Click);
-            // 
             // menuRunScriptsSequentially
             // 
             this.menuRunScriptsSequentially.Name = "menuRunScriptsSequentially";
@@ -244,6 +235,7 @@
             this.lvDatabases.TabIndex = 6;
             this.lvDatabases.UseCompatibleStateImageBehavior = false;
             this.lvDatabases.Enter += new System.EventHandler(this.listViewConfiguration_Enter);
+            this.lvDatabases.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViews_KeyDown);
             // 
             // toolbar
             // 
@@ -347,6 +339,7 @@
             this.lvScripts.TabIndex = 9;
             this.lvScripts.UseCompatibleStateImageBehavior = false;
             this.lvScripts.Enter += new System.EventHandler(this.listViewConfiguration_Enter);
+            this.lvScripts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViews_KeyDown);
             // 
             // frmMain
             // 
@@ -397,7 +390,6 @@
         private System.Windows.Forms.ToolStripMenuItem menuLoadScript;
         private System.Windows.Forms.ToolStripMenuItem menuRunScriptsSequentially;
         private System.Windows.Forms.ToolStripMenuItem menuRunScriptsParallel;
-        private System.Windows.Forms.ToolStripMenuItem menuUnloadScript;
         private System.Windows.Forms.ToolStripMenuItem menuOpenScriptConfiguration;
         private System.Windows.Forms.ToolStripMenuItem menuSaveScriptConfiguration;
         public System.Windows.Forms.ListView lvDatabases;

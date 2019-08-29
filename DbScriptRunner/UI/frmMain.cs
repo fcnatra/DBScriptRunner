@@ -90,17 +90,17 @@ namespace DbScriptRunner.UI
 
         private void toolbarMoveUp_Click(object sender, EventArgs e)
         {
-            MoveItemUp();
+            MoveItemsUp();
         }
 
         private void toolbarMoveDown_Click(object sender, EventArgs e)
         {
-            MoveItemDown();
+            MoveItemsDown();
         }
 
         private void toolbarRemove_Click(object sender, EventArgs e)
         {
-            RemoveItem();
+            RemoveItemsOnFocusedList();
         }
 
         private void toolbarAddNewItem_Click(object sender, EventArgs e)
@@ -154,12 +154,7 @@ namespace DbScriptRunner.UI
         {
             AddNewItem();
         }
-
-        private void menuUnloadScript_Click(object sender, EventArgs e)
-        {
-            RemoveItem();
-        }
-
+ 
         private void menuRunScriptsSequentially_Click(object sender, EventArgs e)
         {
             var runner = new Runner();
@@ -176,6 +171,15 @@ namespace DbScriptRunner.UI
 
             HighlightListViewHeader((ListView)sender);
             UnHighlightListViewHeader(listViewToUnfocus);
+        }
+
+        private void listViews_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                RemoveItemsOnFocusedList();
+                e.Handled = true;
+            }
         }
 
         private void UnHighlightListViewHeader(ListView unfocusedListView)
@@ -231,7 +235,7 @@ namespace DbScriptRunner.UI
                 lvControl.SelectedIndices.Add(index);
         }
 
-        private void RemoveItem()
+        private void RemoveItemsOnFocusedList()
         {
             var focusedListView = GetFocusedListBetweenDatabasesOrScripts();
             if (focusedListView == null) return;
@@ -248,7 +252,7 @@ namespace DbScriptRunner.UI
             PopulateListView(datasource, focusedListView, indicesToSelect);
         }
 
-        private void MoveItemDown()
+        private void MoveItemsDown()
         {
             ListView focusedListView = GetFocusedListBetweenDatabasesOrScripts();
             if (focusedListView == null) return;
@@ -265,7 +269,7 @@ namespace DbScriptRunner.UI
             PopulateListView(datasource, focusedListView, indicesToSelect);
         }
 
-        private void MoveItemUp()
+        private void MoveItemsUp()
         {
             ListView focusedListView = GetFocusedListBetweenDatabasesOrScripts();
             if (focusedListView == null) return;
