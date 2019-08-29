@@ -58,6 +58,7 @@
             this.lblDatabasesTitle = new System.Windows.Forms.Label();
             this.lblScriptsTitle = new System.Windows.Forms.Label();
             this.lvScripts = new System.Windows.Forms.ListView();
+            this.menuCreateNewServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -143,6 +144,7 @@
             this.serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuOpenServersConfiguration,
             this.menuSaveServersConfiguration,
+            this.menuCreateNewServersConfiguration,
             this.addServerToolStripMenuItem,
             this.editSelectedServerToolStripMenuItem});
             this.serversToolStripMenuItem.Name = "serversToolStripMenuItem";
@@ -152,28 +154,28 @@
             // menuOpenServersConfiguration
             // 
             this.menuOpenServersConfiguration.Name = "menuOpenServersConfiguration";
-            this.menuOpenServersConfiguration.Size = new System.Drawing.Size(231, 22);
-            this.menuOpenServersConfiguration.Text = "&Open Database Configuration";
+            this.menuOpenServersConfiguration.Size = new System.Drawing.Size(212, 22);
+            this.menuOpenServersConfiguration.Text = "&Open Configuration";
             this.menuOpenServersConfiguration.Click += new System.EventHandler(this.menuOpenServersConfiguration_Click);
             // 
             // menuSaveServersConfiguration
             // 
             this.menuSaveServersConfiguration.Name = "menuSaveServersConfiguration";
-            this.menuSaveServersConfiguration.Size = new System.Drawing.Size(231, 22);
-            this.menuSaveServersConfiguration.Text = "&Save Database Configuration";
+            this.menuSaveServersConfiguration.Size = new System.Drawing.Size(212, 22);
+            this.menuSaveServersConfiguration.Text = "&Save Configuration";
             this.menuSaveServersConfiguration.Click += new System.EventHandler(this.menuSaveServersConfiguration_Click);
             // 
             // addServerToolStripMenuItem
             // 
             this.addServerToolStripMenuItem.Name = "addServerToolStripMenuItem";
-            this.addServerToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.addServerToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.addServerToolStripMenuItem.Text = "&Add Database";
             this.addServerToolStripMenuItem.Click += new System.EventHandler(this.addServerToolStripMenuItem_Click);
             // 
             // editSelectedServerToolStripMenuItem
             // 
             this.editSelectedServerToolStripMenuItem.Name = "editSelectedServerToolStripMenuItem";
-            this.editSelectedServerToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.editSelectedServerToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.editSelectedServerToolStripMenuItem.Text = "&Edit Selected Database";
             this.editSelectedServerToolStripMenuItem.Click += new System.EventHandler(this.editSelectedServerToolStripMenuItem_Click);
             // 
@@ -341,6 +343,13 @@
             this.lvScripts.Enter += new System.EventHandler(this.listViewConfiguration_Enter);
             this.lvScripts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViews_KeyDown);
             // 
+            // menuCreateNewServersConfiguration
+            // 
+            this.menuCreateNewServersConfiguration.Name = "menuCreateNewServersConfiguration";
+            this.menuCreateNewServersConfiguration.Size = new System.Drawing.Size(212, 22);
+            this.menuCreateNewServersConfiguration.Text = "Create &New Configuration";
+            this.menuCreateNewServersConfiguration.Click += new System.EventHandler(this.menuCreateNewServersConfiguration_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -402,6 +411,7 @@
         private System.Windows.Forms.Label lblDatabasesTitle;
         private System.Windows.Forms.Label lblScriptsTitle;
         public System.Windows.Forms.ListView lvScripts;
+        private System.Windows.Forms.ToolStripMenuItem menuCreateNewServersConfiguration;
     }
 }
 

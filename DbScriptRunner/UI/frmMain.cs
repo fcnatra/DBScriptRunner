@@ -82,10 +82,12 @@ namespace DbScriptRunner.UI
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            CheckDatabaseConfigIsSaved(e);
+            bool continueClosing  = CheckConfigurationIsSaved(_databasesAppData, "Database");
+            e.Cancel = !continueClosing;
             if (e.Cancel) return;
 
-            CheckScriptConfigIsSaved(e);
+            continueClosing = CheckConfigurationIsSaved(_scriptsAppData, "Script");
+            e.Cancel = !continueClosing;
         }
 
         private void toolbarMoveUp_Click(object sender, EventArgs e)
@@ -127,7 +129,7 @@ namespace DbScriptRunner.UI
 
         private void menuSaveServersConfiguration_Click(object sender, EventArgs e)
         {
-            SaveDatabaseConfigurationFile();
+            SaveConfigurationFile(_databasesAppData);
         }
 
         private void addServerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -147,7 +149,7 @@ namespace DbScriptRunner.UI
 
         private void menuSaveScriptConfiguration_Click(object sender, EventArgs e)
         {
-            SaveScriptConfigurationFile();
+            SaveConfigurationFile(_scriptsAppData);
         }
 
         private void menuLoadScript_Click(object sender, EventArgs e)
@@ -180,6 +182,12 @@ namespace DbScriptRunner.UI
                 RemoveItemsOnFocusedList();
                 e.Handled = true;
             }
+        }
+
+        private void menuCreateNewServersConfiguration_Click(object sender, EventArgs e)
+        {
+            this._databasesAppData.CreateNew();
+            PopulateListView(this._databasesAppData.Instances, lvDatabases);
         }
 
         private void UnHighlightListViewHeader(ListView unfocusedListView)
@@ -391,27 +399,33 @@ namespace DbScriptRunner.UI
             return listView.SelectedItems.Count > 0;
         }
 
-        private void SaveDatabaseConfigurationFile()
+        private bool SaveConfigurationFile<T>(AppData<T> appData, bool askForConfirmation = true) where T : INamed, new()
         {
-            var dbName = _databasesAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
-            var dbLocation = _databasesAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
+            bool configurationSaved = false;
 
-            string fullPath = string.Empty;
+            var fileName = appData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
+            var dbLocation = appData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
-            if (string.IsNullOrEmpty(dbName))
+            string fullPath = string.Empty;            
+
+            if (appData.IsNewConfiguration)
             {
-                fullPath = CommonDialogs.SaveToFileDialogBox(dbName, dbLocation);
+                fullPath = CommonDialogs.SaveToFileDialogBox(fileName, dbLocation);
             }
             else
             {
-                if (CommonDialogs.AreYouSure("SAVE FILE") == DialogResult.Yes)
-                    fullPath = Path.Combine(dbLocation, dbName);
+                fullPath = Path.Combine(dbLocation, fileName);
+                if (askForConfirmation && CommonDialogs.AreYouSure("SAVE FILE") == DialogResult.No)
+                    fullPath = string.Empty;
             }
 
             if (!string.IsNullOrEmpty(fullPath))
             {
-                _databasesAppData.SaveItems(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
+                appData.SaveItems(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
+                configurationSaved = true;
             }
+
+            return configurationSaved;
         }
 
         private void LoadScriptConfigurationFile()
@@ -426,54 +440,25 @@ namespace DbScriptRunner.UI
             }
         }
 
-        private void SaveScriptConfigurationFile()
+        private bool CheckConfigurationIsSaved<T>(AppData<T> appData, string appDataContentForMessage) where T: INamed, new()
         {
-            var scriptName = _scriptsAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
-            var scriptLocation = _scriptsAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
-
-            var fullPath = CommonDialogs.SaveToFileDialogBox(scriptName, scriptLocation);
-            if (!string.IsNullOrEmpty(fullPath))
-            {
-                _scriptsAppData.SaveItems(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
-            }
-        }
-
-        private void CheckScriptConfigIsSaved(FormClosingEventArgs e)
-        {
+            bool operationResult = true;
             DialogResult dialogResult = DialogResult.OK;
-            if (_scriptsAppData.HaveChanged())
+
+            if (appData.HaveChanged())
             {
-                dialogResult = MessageBox.Show("Script configuration has changed. Want to save the current list?", "CONTENT HAVE CHANGED", MessageBoxButtons.YesNoCancel);
+                dialogResult = MessageBox.Show($"{appDataContentForMessage.ToUpper()} configuration has changed. Do want to save the current list?", "CONTENT HAVE CHANGED", MessageBoxButtons.YesNoCancel);
                 if (dialogResult == DialogResult.Yes)
-                    SaveScriptConfigurationFile();
+                    operationResult = SaveConfigurationFile(appData, false);
             }
 
             if (dialogResult == DialogResult.Cancel)
             {
-                e.Cancel = true;
-                return;
+                operationResult = false;
             }
 
-            _scriptsAppData.BackupCurrentStatus();
-        }
-
-        private void CheckDatabaseConfigIsSaved(FormClosingEventArgs e)
-        {
-            DialogResult dialogResult = DialogResult.OK;
-            if (_databasesAppData.HaveChanged())
-            {
-                dialogResult = MessageBox.Show("Databases changed. Want to save the current list?", "CONTENT HAVE CHANGED", MessageBoxButtons.YesNoCancel);
-                if (dialogResult == DialogResult.Yes)
-                    SaveDatabaseConfigurationFile();
-            }
-
-            if (dialogResult == DialogResult.Cancel)
-            {
-                e.Cancel = true;
-                return;
-            }
-
-            _databasesAppData.BackupCurrentStatus();
+            appData.BackupCurrentStatus();
+            return operationResult;
         }
     }
 }

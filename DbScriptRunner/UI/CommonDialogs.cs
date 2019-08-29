@@ -17,7 +17,7 @@ namespace DbScriptRunner.UI
 
         public static DialogResult AreYouSure(string dialogTitle = "PLEASE CONFIRM")
         {
-            return MessageBox.Show("Are you sure?", dialogTitle, MessageBoxButtons.YesNo);
+            return MessageBox.Show("Are you sure?", dialogTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
 
         private static string ShowFileDialog(FileDialog fileDialog, string defaultFileName, string initialDirectory)

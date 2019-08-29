@@ -3,6 +3,7 @@ using DbScriptRunnerLogic.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace DbScriptRunnerLogic
 {
@@ -45,8 +46,11 @@ namespace DbScriptRunnerLogic
             var items = new List<INamed>();
             foreach (var dataRow in dataRows)
             {
-                if (!string.IsNullOrEmpty(dataRow)) 
-                    items.Add(new T { Name = dataRow });
+                if (!string.IsNullOrEmpty(dataRow))
+                {
+                    var instance = new T() { Name = dataRow };
+                    items.Add((T)instance);
+                }
             }
             return items;
         }

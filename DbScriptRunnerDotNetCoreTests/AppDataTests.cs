@@ -115,6 +115,36 @@ namespace DbScriptRunnerTests
             Assert.AreEqual(expectedFileName, scriptsAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName]);
             Assert.AreEqual(expectedPath, scriptsAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation]);
         }
+
+        [TestMethod]
+        public void GivenInitializedScriptConfiguration_CreatingNew_ClearsCurrentList()
+        {
+            var dbAppData = new AppData<Database>();
+            dbAppData.Instances = new ArrangeableList<INamed>()
+            {
+                new Database {Name = "A"},
+                new Database {Name = "B"}
+            };
+            dbAppData.CreateNew();
+            Assert.IsFalse(dbAppData.Instances.Any());
+        }
+
+        [TestMethod]
+        public void GivenInitializedScriptConfiguration_CreatingNew_UsesDefaultConfigFileName()
+        {
+            IRepository fakeRepository = A.Fake<IRepository>();
+            A.CallTo(() => fakeRepository.Load()).Returns("fakeContent");
+
+            var dbAppData = new AppData<Database>();
+            var expectedConfigFileName = dbAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
+            dbAppData.Persistence.Repository = fakeRepository;
+
+            dbAppData.RecoverLastStatus();
+            dbAppData.CreateNew();
+
+            var configNameAfterCreateNew = dbAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
+            Assert.AreEqual(expectedConfigFileName, configNameAfterCreateNew);
+        }
     }
 }
 

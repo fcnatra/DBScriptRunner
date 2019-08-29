@@ -15,13 +15,34 @@ namespace DbScriptRunner.Services
 
         public ApplicationStatusBackup Status { get; set; }
 
-        public DataPersistence<T> Persistence { get; set; } = new DataPersistence<T>();
+        public DataPersistence<T> Persistence { get; set; }
 
-        public IArrangeableList<INamed> Instances { get; set; } = new ArrangeableList<INamed>();
+        public IArrangeableList<INamed> Instances { get; set; }
+
+        public bool IsNewConfiguration => Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] == DEFAULT_CONFIGURATION_NAME;
 
         public AppData()
         {
+            Initialize();
+            ClearContent();
+        }
+
+        private void Initialize()
+        {
+            Persistence = new DataPersistence<T>();
+        }
+
+        private void ClearContent()
+        {
+            Instances = new ArrangeableList<INamed>();
+            InitializeStatus();
+        }
+
+        private void InitializeStatus()
+        {
             Status = new ApplicationStatusBackup();
+            Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = DEFAULT_CONFIGURATION_NAME;
+            Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = ".\\";
             Status.StatusBackupPrefix = typeof(T).ToString();
         }
 
@@ -112,6 +133,11 @@ namespace DbScriptRunner.Services
         internal bool HaveChanged()
         {
             return ((ArrangeableList<INamed>)Instances).ListHasChanged;
+        }
+
+        public void CreateNew()
+        {
+            this.ClearContent();
         }
     }
 }

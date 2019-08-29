@@ -216,6 +216,7 @@ namespace DbScriptRunnerTests
 
             Assert.IsFalse(arrangeableList.ListHasChanged);
         }
+
     }
 }
 
