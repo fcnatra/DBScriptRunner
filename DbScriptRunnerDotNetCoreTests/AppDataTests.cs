@@ -233,6 +233,29 @@ namespace DbScriptRunnerTests
 
             Assert.IsTrue(expectedList.SequenceEqual(appData.LastOpenedFiles));
         }
+
+        [TestMethod]
+        public void BackingUpTheStatus_BacksUpTheLastOpenedFiles()
+        {
+            var expectedFullName1 = "C:\\Temp\\unexistingFile1";
+            var expectedFullName2 = "C:\\Temp\\unexistingFile2";
+
+            IRepository fakeRepository = A.Fake<IRepository>();
+            A.CallTo(() => fakeRepository.Load()).Returns("fakeContent");
+
+            var appData = new AppData<Script>();
+            appData.Persistence.Repository = fakeRepository;
+            appData.Status.Persistence.Repository = fakeRepository;
+
+            appData.Load(expectedFullName1);
+            appData.Load(expectedFullName2);
+            appData.BackupCurrentStatus();
+
+            A.CallTo(() => fakeRepository.Save(A<string>
+                .That
+                .Contains(appData.Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles])))
+                .MustHaveHappened();
+        }
     }
 }
 

@@ -22,8 +22,7 @@ namespace DbScriptRunner.Services
 
         public bool IsNewConfiguration => Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] == DEFAULT_CONFIGURATION_NAME;
 
-        private List<string> _lastOpenedFiles = new List<string>();
-        public List<string> LastOpenedFiles => _lastOpenedFiles.ToList();
+        public List<string> LastOpenedFiles => Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
         public AppData()
         {
@@ -45,8 +44,12 @@ namespace DbScriptRunner.Services
         private void InitializeStatus()
         {
             Status = new ApplicationStatusBackup();
+
             Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = DEFAULT_CONFIGURATION_NAME;
             Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = ".\\";
+
+            Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles] = "";
+
             Status.StatusBackupPrefix = typeof(T).ToString();
         }
 
@@ -86,8 +89,6 @@ namespace DbScriptRunner.Services
             if (RepositoryNameOrRepositoryLocationAreEmpty())
                 return;
 
-            Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = Persistence.Repository.Name;
-            Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = Persistence.Repository.Location;
             Status.SaveStatus();
         }
 
@@ -102,34 +103,39 @@ namespace DbScriptRunner.Services
 
             Instances.InitializeWith(dataForInstances);
 
-            UpdateStatusWithLoadedFileInfo(locationPath, fileName);
-            UpdateLastOpenedFilesList(locationPath, fileName);
+            UpdateStatus(locationPath, fileName);
         }
 
-        private void UpdateStatusWithLoadedFileInfo(string locationPath, string fileName)
+        private void UpdateStatus(string locationPath, string fileName)
         {
             Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = fileName;
             Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = locationPath;
+
+            UpdateLastOpenedFilesList(locationPath, fileName);
         }
 
         private void UpdateLastOpenedFilesList(string path, string fileName)
         {
             var fullFileName = Path.Combine(path, fileName);
+            var lastOpenedFiles = LastOpenedFiles;
 
-            RemoveFileName_FromLastOpenedFiles(fullFileName);
-            _lastOpenedFiles.Insert(0, fullFileName);
-            CutLastOpenedFilesList_ToMatchMaxLimit();
+            RemoveFileNameFromLastOpenedFiles(fullFileName, lastOpenedFiles);
+
+            lastOpenedFiles.Insert(0, fullFileName);
+
+            CutLastOpenedFilesToMatchMaxLimit(lastOpenedFiles);
+
+            Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles] = string.Join(",", lastOpenedFiles);
         }
 
-        private void CutLastOpenedFilesList_ToMatchMaxLimit()
+        private static void CutLastOpenedFilesToMatchMaxLimit(List<string> lastOpenedFiles)
         {
-            if (_lastOpenedFiles.Count > MAX_LAST_OPENED_FILES)
-                _lastOpenedFiles.RemoveAt(MAX_LAST_OPENED_FILES);
+            if (lastOpenedFiles.Count > MAX_LAST_OPENED_FILES) lastOpenedFiles.RemoveAt(MAX_LAST_OPENED_FILES);
         }
 
-        private void RemoveFileName_FromLastOpenedFiles(string fullFileName)
+        private static void RemoveFileNameFromLastOpenedFiles(string fullFileName, List<string> lastOpenedFiles)
         {
-            if (_lastOpenedFiles.Contains(fullFileName)) _lastOpenedFiles.Remove(fullFileName);
+            if (lastOpenedFiles.Contains(fullFileName)) lastOpenedFiles.Remove(fullFileName);
         }
 
         public void Load(string fullFileName)

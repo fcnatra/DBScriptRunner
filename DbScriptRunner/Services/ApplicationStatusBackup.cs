@@ -17,8 +17,9 @@ namespace DbScriptRunner.Services
         {
             ConfigurationFileName = 0,
             ConfigurationFileLocation = 1,
+            LastOpenedFiles = 2
         }
-        
+
         public DataPersistence<StatusBackupElement> Persistence { get; set; } = new DataPersistence<StatusBackupElement>();
 
         public string StatusBackupPrefix { get; set; } = string.Empty;
@@ -65,21 +66,6 @@ namespace DbScriptRunner.Services
             var rowsInContent = Persistence.Load();
             BackupContent.Clear();
             BackupContent.AddRange(rowsInContent.Select(x => x.Name));
-        }
-
-        public IEnumerable<string> RecoverLastOpenedFiles()
-        {
-            Persistence.Repository.Name = GetWithStatusBackupPrefix(StatusBackupLastOpenedFiles);
-            var rowsInContent = Persistence.Load();
-            return rowsInContent.Select(x => x.Name);
-        }
-
-        public void SaveLastOpenedFiles(IEnumerable<string> fileList)
-        {
-            Persistence.Items = new List<INamed>();
-            Persistence.Items.AddRange(fileList.Select(x => new StatusBackupElement { Name = x }));
-            Persistence.Repository.Name = GetWithStatusBackupPrefix(StatusBackupLastOpenedFiles);
-            Persistence.Save();
         }
     }
 }
