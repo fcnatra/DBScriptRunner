@@ -97,7 +97,7 @@ namespace DbScriptRunner.Services
             Persistence.Repository.Name = locationName;
             Persistence.Repository.Location = locationPath;
 
-            List<INamed> dataForInstances = Persistence.Load();
+            List<INamed> dataForInstances = Persistence.Load().ToList();
 
             Instances.InitializeWith(dataForInstances);
 
