@@ -139,5 +139,14 @@ namespace DbScriptRunner.Services
         {
             this.ClearContent();
         }
+
+        public AppData<T> CreateNewFromThis()
+        {
+            var newAppData = new AppData<T>();
+            newAppData.Instances = this.Instances;
+            newAppData.Persistence = this.Persistence;
+            newAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = this.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
+            return newAppData;
+        }
     }
 }

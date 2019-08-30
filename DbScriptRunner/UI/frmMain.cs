@@ -117,14 +117,7 @@ namespace DbScriptRunner.UI
 
         private void menuOpenServersConfiguration_Click(object sender, EventArgs e)
         {
-            var folderToOpen = _databasesAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
-
-            var fullPath = CommonDialogs.SelectFileDialogBox("", folderToOpen);
-            if (!string.IsNullOrEmpty(fullPath))
-            {
-                _databasesAppData.Load(fullPath);
-                PopulateListView(_databasesAppData.Instances, lvDatabases);
-            }
+            OpenConfigurationFile(_databasesAppData, lvDatabases);
         }
 
         private void menuSaveServersConfiguration_Click(object sender, EventArgs e)
@@ -144,7 +137,7 @@ namespace DbScriptRunner.UI
 
         private void menuOpenScriptConfiguration_Click(object sender, EventArgs e)
         {
-            LoadScriptConfigurationFile();
+            OpenConfigurationFile(_scriptsAppData, lvScripts);
         }
 
         private void menuSaveScriptConfiguration_Click(object sender, EventArgs e)
@@ -194,6 +187,23 @@ namespace DbScriptRunner.UI
         {
             _scriptsAppData.CreateNew();
             PopulateListView(_scriptsAppData.Instances, lvScripts);
+        }
+
+        private void menuSaveServersConfigurationAs_Click(object sender, EventArgs e)
+        {
+            SaveConfigurationFileAs(_databasesAppData);
+        }
+
+        private void menuSaveScriptConfigurationAs_Click(object sender, EventArgs e)
+        {
+            SaveConfigurationFileAs(_scriptsAppData);
+        }
+
+        private void SaveConfigurationFileAs<T>(AppData<T> appData) where T : INamed, new()
+        {
+            var newAppData = appData.CreateNewFromThis();
+            bool saved = SaveConfigurationFile(newAppData);
+            if (saved) appData = newAppData;
         }
 
         private void UnHighlightListViewHeader(ListView unfocusedListView)
@@ -434,15 +444,15 @@ namespace DbScriptRunner.UI
             return configurationSaved;
         }
 
-        private void LoadScriptConfigurationFile()
+        private void OpenConfigurationFile<T>(AppData<T> appData, ListView listViewToPopulate) where T : INamed, new()
         {
-            var folderToOpen = _scriptsAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
+            var folderToOpen = appData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
             var fullPath = CommonDialogs.SelectFileDialogBox("", folderToOpen);
             if (!string.IsNullOrEmpty(fullPath))
             {
-                _scriptsAppData.Load(fullPath);
-                PopulateListView(_scriptsAppData.Instances, lvScripts);
+                appData.Load(fullPath);
+                PopulateListView(appData.Instances, listViewToPopulate);
             }
         }
 

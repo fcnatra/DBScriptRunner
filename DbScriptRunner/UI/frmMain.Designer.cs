@@ -40,11 +40,13 @@
             this.serversToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSaveServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCreateNewServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.addServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editSelectedServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scriptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSaveScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCreateNewScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLoadScript = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRunScriptsSequentially = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRunScriptsParallel = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,8 +60,8 @@
             this.lblDatabasesTitle = new System.Windows.Forms.Label();
             this.lblScriptsTitle = new System.Windows.Forms.Label();
             this.lvScripts = new System.Windows.Forms.ListView();
-            this.menuCreateNewServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuCreateNewScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveServersConfigurationAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveScriptConfigurationAs = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -145,6 +147,7 @@
             this.serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuOpenServersConfiguration,
             this.menuSaveServersConfiguration,
+            this.menuSaveServersConfigurationAs,
             this.menuCreateNewServersConfiguration,
             this.addServerToolStripMenuItem,
             this.editSelectedServerToolStripMenuItem});
@@ -166,6 +169,13 @@
             this.menuSaveServersConfiguration.Text = "&Save Configuration";
             this.menuSaveServersConfiguration.Click += new System.EventHandler(this.menuSaveServersConfiguration_Click);
             // 
+            // menuCreateNewServersConfiguration
+            // 
+            this.menuCreateNewServersConfiguration.Name = "menuCreateNewServersConfiguration";
+            this.menuCreateNewServersConfiguration.Size = new System.Drawing.Size(212, 22);
+            this.menuCreateNewServersConfiguration.Text = "Create &New Configuration";
+            this.menuCreateNewServersConfiguration.Click += new System.EventHandler(this.menuCreateNewServersConfiguration_Click);
+            // 
             // addServerToolStripMenuItem
             // 
             this.addServerToolStripMenuItem.Name = "addServerToolStripMenuItem";
@@ -185,6 +195,7 @@
             this.scriptsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuOpenScriptConfiguration,
             this.menuSaveScriptConfiguration,
+            this.menuSaveScriptConfigurationAs,
             this.menuCreateNewScriptConfiguration,
             this.menuLoadScript,
             this.menuRunScriptsSequentially,
@@ -206,6 +217,13 @@
             this.menuSaveScriptConfiguration.Size = new System.Drawing.Size(309, 22);
             this.menuSaveScriptConfiguration.Text = "&Save Configuration";
             this.menuSaveScriptConfiguration.Click += new System.EventHandler(this.menuSaveScriptConfiguration_Click);
+            // 
+            // menuCreateNewScriptConfiguration
+            // 
+            this.menuCreateNewScriptConfiguration.Name = "menuCreateNewScriptConfiguration";
+            this.menuCreateNewScriptConfiguration.Size = new System.Drawing.Size(309, 22);
+            this.menuCreateNewScriptConfiguration.Text = "Create &New Configuration";
+            this.menuCreateNewScriptConfiguration.Click += new System.EventHandler(this.menuCreateNewScriptConfiguration_Click);
             // 
             // menuLoadScript
             // 
@@ -345,19 +363,19 @@
             this.lvScripts.Enter += new System.EventHandler(this.listViewConfiguration_Enter);
             this.lvScripts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViews_KeyDown);
             // 
-            // menuCreateNewServersConfiguration
+            // menuSaveServersConfigurationAs
             // 
-            this.menuCreateNewServersConfiguration.Name = "menuCreateNewServersConfiguration";
-            this.menuCreateNewServersConfiguration.Size = new System.Drawing.Size(212, 22);
-            this.menuCreateNewServersConfiguration.Text = "Create &New Configuration";
-            this.menuCreateNewServersConfiguration.Click += new System.EventHandler(this.menuCreateNewServersConfiguration_Click);
+            this.menuSaveServersConfigurationAs.Name = "menuSaveServersConfigurationAs";
+            this.menuSaveServersConfigurationAs.Size = new System.Drawing.Size(212, 22);
+            this.menuSaveServersConfigurationAs.Text = "Sa&ve Configuration As...";
+            this.menuSaveServersConfigurationAs.Click += new System.EventHandler(this.menuSaveServersConfigurationAs_Click);
             // 
-            // menuCreateNewScriptConfiguration
+            // menuSaveScriptConfigurationAs
             // 
-            this.menuCreateNewScriptConfiguration.Name = "menuCreateNewScriptConfiguration";
-            this.menuCreateNewScriptConfiguration.Size = new System.Drawing.Size(309, 22);
-            this.menuCreateNewScriptConfiguration.Text = "Create &New Configuration";
-            this.menuCreateNewScriptConfiguration.Click += new System.EventHandler(this.menuCreateNewScriptConfiguration_Click);
+            this.menuSaveScriptConfigurationAs.Name = "menuSaveScriptConfigurationAs";
+            this.menuSaveScriptConfigurationAs.Size = new System.Drawing.Size(309, 22);
+            this.menuSaveScriptConfigurationAs.Text = "Sa&ve Configuration As...";
+            this.menuSaveScriptConfigurationAs.Click += new System.EventHandler(this.menuSaveScriptConfigurationAs_Click);
             // 
             // frmMain
             // 
@@ -422,6 +440,8 @@
         public System.Windows.Forms.ListView lvScripts;
         private System.Windows.Forms.ToolStripMenuItem menuCreateNewServersConfiguration;
         private System.Windows.Forms.ToolStripMenuItem menuCreateNewScriptConfiguration;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveServersConfigurationAs;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveScriptConfigurationAs;
     }
 }
 
