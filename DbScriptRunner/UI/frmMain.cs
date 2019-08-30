@@ -70,8 +70,15 @@ namespace DbScriptRunner.UI
             {
                 var menuItem = new ToolStripMenuItem();
                 menuItem.Text = fullFileName;
+                menuItem.Click += (sender, e) => { LastOpenedFiles_Click(menuItem, appData); };
                 menuOption.DropDownItems.Add(menuItem);
             }
+        }
+
+        private void LastOpenedFiles_Click<T>(ToolStripMenuItem menuItem, AppData<T> appData) where T: INamed, new()
+        {
+            var listView = (appData is AppData<Script>) ? lvScripts : lvDatabases;
+            OpenConfigurationFile(appData, listView, menuItem.Text);
         }
 
         private void RemoveItemsBelowSeparator(ToolStripMenuItem menuOption, ToolStripSeparator separator)
@@ -145,7 +152,7 @@ namespace DbScriptRunner.UI
 
         private void menuOpenServersConfiguration_Click(object sender, EventArgs e)
         {
-            OpenConfigurationFile(_databasesAppData, lvDatabases);
+            SelectConfigurationFileToOpen(_databasesAppData, lvDatabases);
         }
 
         private void menuSaveServersConfiguration_Click(object sender, EventArgs e)
@@ -165,7 +172,7 @@ namespace DbScriptRunner.UI
 
         private void menuOpenScriptConfiguration_Click(object sender, EventArgs e)
         {
-            OpenConfigurationFile(_scriptsAppData, lvScripts);
+            SelectConfigurationFileToOpen(_scriptsAppData, lvScripts);
         }
 
         private void menuSaveScriptConfiguration_Click(object sender, EventArgs e)
@@ -472,17 +479,20 @@ namespace DbScriptRunner.UI
             return configurationSaved;
         }
 
-        private void OpenConfigurationFile<T>(AppData<T> appData, ListView listViewToPopulate) where T : INamed, new()
+        private void SelectConfigurationFileToOpen<T>(AppData<T> appData, ListView listViewToPopulate) where T : INamed, new()
         {
             var folderToOpen = appData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
 
             var fullPath = CommonDialogs.SelectFileDialogBox("", folderToOpen);
             if (!string.IsNullOrEmpty(fullPath))
-            {
-                appData.Load(fullPath);
-                PopulateListView(appData.Instances, listViewToPopulate);
-                InitializeLastOpenedFiles();
-            }
+                OpenConfigurationFile(appData, listViewToPopulate, fullPath);
+        }
+
+        private void OpenConfigurationFile<T>(AppData<T> appData, ListView listViewToPopulate, string fullPath) where T : INamed, new()
+        {
+            appData.Load(fullPath);
+            PopulateListView(appData.Instances, listViewToPopulate);
+            InitializeLastOpenedFiles();
         }
 
         private bool CheckConfigurationIsSaved<T>(AppData<T> appData, string appDataContentForMessage) where T: INamed, new()
