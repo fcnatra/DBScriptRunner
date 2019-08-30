@@ -48,8 +48,6 @@ namespace DbScriptRunner.Services
             Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = DEFAULT_CONFIGURATION_NAME;
             Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = ".\\";
 
-            Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles] = "";
-
             Status.StatusBackupPrefix = typeof(T).ToString();
         }
 
