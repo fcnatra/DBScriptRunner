@@ -52,6 +52,34 @@ namespace DbScriptRunner.UI
             PopulateListView(_scriptsAppData.Instances, lvScripts, null);
 
             HighlightListViewHeader(lvDatabases);
+
+            InitializeLastOpenedFiles();
+        }
+
+        private void InitializeLastOpenedFiles()
+        {
+            InitializeLastOpenedFiles(_databasesAppData, serversToolStripMenuItem, menuServersSeparator);
+            InitializeLastOpenedFiles(_scriptsAppData, scriptsToolStripMenuItem, menuScriptsSeparator);
+        }
+
+        private void InitializeLastOpenedFiles<T>(AppData<T> appData, ToolStripMenuItem menuOption, ToolStripSeparator separator) where T: INamed, new()
+        {
+            RemoveItemsBelowSeparator(menuOption, separator);
+
+            foreach (var fullFileName in appData.LastOpenedFiles)
+            {
+                var menuItem = new ToolStripMenuItem();
+                menuItem.Text = fullFileName;
+                menuOption.DropDownItems.Add(menuItem);
+            }
+        }
+
+        private void RemoveItemsBelowSeparator(ToolStripMenuItem menuOption, ToolStripSeparator separator)
+        {
+            var indexOfSeparator = menuOption.DropDownItems.IndexOf(separator);
+            var maxIndex = menuOption.DropDownItems.Count - 1;
+            for (int i = indexOfSeparator; i < maxIndex; i++)
+                menuOption.DropDownItems.RemoveAt(indexOfSeparator+1);
         }
 
         private void InitializeUIForScriptsListView()
@@ -453,6 +481,7 @@ namespace DbScriptRunner.UI
             {
                 appData.Load(fullPath);
                 PopulateListView(appData.Instances, listViewToPopulate);
+                InitializeLastOpenedFiles();
             }
         }
 

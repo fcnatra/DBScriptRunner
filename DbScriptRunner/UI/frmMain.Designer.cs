@@ -62,6 +62,8 @@
             this.lvScripts = new System.Windows.Forms.ListView();
             this.menuSaveServersConfigurationAs = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSaveScriptConfigurationAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuScriptsSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.menuServersSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -150,7 +152,8 @@
             this.menuSaveServersConfigurationAs,
             this.menuCreateNewServersConfiguration,
             this.addServerToolStripMenuItem,
-            this.editSelectedServerToolStripMenuItem});
+            this.editSelectedServerToolStripMenuItem,
+            this.menuServersSeparator});
             this.serversToolStripMenuItem.Name = "serversToolStripMenuItem";
             this.serversToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.serversToolStripMenuItem.Text = "&Databases";
@@ -199,7 +202,8 @@
             this.menuCreateNewScriptConfiguration,
             this.menuLoadScript,
             this.menuRunScriptsSequentially,
-            this.menuRunScriptsParallel});
+            this.menuRunScriptsParallel,
+            this.menuScriptsSeparator});
             this.scriptsToolStripMenuItem.Name = "scriptsToolStripMenuItem";
             this.scriptsToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.scriptsToolStripMenuItem.Text = "&Scripts";
@@ -377,6 +381,16 @@
             this.menuSaveScriptConfigurationAs.Text = "Sa&ve Configuration As...";
             this.menuSaveScriptConfigurationAs.Click += new System.EventHandler(this.menuSaveScriptConfigurationAs_Click);
             // 
+            // menuScriptsSeparator
+            // 
+            this.menuScriptsSeparator.Name = "menuScriptsSeparator";
+            this.menuScriptsSeparator.Size = new System.Drawing.Size(306, 6);
+            // 
+            // menuServersSeparator
+            // 
+            this.menuServersSeparator.Name = "menuServersSeparator";
+            this.menuServersSeparator.Size = new System.Drawing.Size(209, 6);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -442,6 +456,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuCreateNewScriptConfiguration;
         private System.Windows.Forms.ToolStripMenuItem menuSaveServersConfigurationAs;
         private System.Windows.Forms.ToolStripMenuItem menuSaveScriptConfigurationAs;
+        private System.Windows.Forms.ToolStripSeparator menuScriptsSeparator;
+        private System.Windows.Forms.ToolStripSeparator menuServersSeparator;
     }
 }
 
