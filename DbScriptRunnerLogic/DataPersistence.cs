@@ -21,6 +21,16 @@ namespace DbScriptRunnerLogic
             return Items;
         }
 
+
+        public List<INamed> Load(string path, string fileName)
+        {
+            Repository.Location = path;
+            Repository.Name = fileName;
+
+            return this.Load();
+        }
+
+
         public void Save()
         {
             var data = SerializeItems();

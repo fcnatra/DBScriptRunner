@@ -145,6 +145,94 @@ namespace DbScriptRunnerTests
             var configNameAfterCreateNew = dbAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName];
             Assert.AreEqual(expectedConfigFileName, configNameAfterCreateNew);
         }
+
+        [TestMethod]
+        public void OpeningAConfigFile_AppearsAsFirstOnLastOpenedFiles()
+        {
+            var expectedFullName = "C:\\Temp\\unexistingFile";
+
+            IRepository fakeRepository = A.Fake<IRepository>();
+            A.CallTo(() => fakeRepository.Load()).Returns("fakeContent");
+
+            var appData = new AppData<Script>();
+            appData.Persistence.Repository = fakeRepository;
+
+            appData.Load(expectedFullName);
+
+            Assert.AreEqual(expectedFullName, appData.LastOpenedFiles[0]);
+        }
+
+        [TestMethod]
+        public void OpeningASecondConfigFile_AppearsAsFirstOnLastOpenedFiles()
+        {
+            var expectedFullName = "C:\\Temp\\unexistingFile";
+
+            IRepository fakeRepository = A.Fake<IRepository>();
+            A.CallTo(() => fakeRepository.Load()).Returns("fakeContent");
+
+            var appData = new AppData<Script>();
+            appData.Persistence.Repository = fakeRepository;
+
+            appData.Load("C:\\Temp\\don't check this file");
+            appData.Load(expectedFullName);
+
+            Assert.AreEqual(expectedFullName, appData.LastOpenedFiles[0]);
+        }
+
+        [TestMethod]
+        public void OpeningTwiceAConfigFile_AppearsJustOnceOnLastOpenedFiles()
+        {
+            var expectedFullName = "C:\\Temp\\unexistingFile";
+
+            IRepository fakeRepository = A.Fake<IRepository>();
+            A.CallTo(() => fakeRepository.Load()).Returns("fakeContent");
+
+            var appData = new AppData<Script>();
+            appData.Persistence.Repository = fakeRepository;
+
+            appData.Load(expectedFullName);
+            appData.Load(expectedFullName);
+
+            Assert.AreEqual(1, appData.LastOpenedFiles.Count);
+        }
+
+        [TestMethod]
+        public void WhenOpeningSevenConfigFiles_LastOpenedFilesWillHoldJustLastFive()
+        {
+            var fileNames = new List<string> {
+                "C:\\Temp\\unexistingFile 1",
+                "C:\\Temp\\unexistingFile 2",
+                "C:\\Temp\\unexistingFile 3",
+                "C:\\Temp\\unexistingFile 4",
+                "C:\\Temp\\unexistingFile 5",
+                "C:\\Temp\\unexistingFile 6",
+                "C:\\Temp\\unexistingFile 7"
+            };
+
+            var expectedList = new List<string> {
+                "C:\\Temp\\unexistingFile 7",
+                "C:\\Temp\\unexistingFile 6",
+                "C:\\Temp\\unexistingFile 5",
+                "C:\\Temp\\unexistingFile 4",
+                "C:\\Temp\\unexistingFile 3"
+            };
+
+            IRepository fakeRepository = A.Fake<IRepository>();
+            A.CallTo(() => fakeRepository.Load()).Returns("fakeContent");
+
+            var appData = new AppData<Script>();
+            appData.Persistence.Repository = fakeRepository;
+
+            appData.Load(fileNames[0]);
+            appData.Load(fileNames[1]);
+            appData.Load(fileNames[2]);
+            appData.Load(fileNames[3]);
+            appData.Load(fileNames[4]);
+            appData.Load(fileNames[5]);
+            appData.Load(fileNames[6]);
+
+            Assert.IsTrue(expectedList.SequenceEqual(appData.LastOpenedFiles));
+        }
     }
 }
 

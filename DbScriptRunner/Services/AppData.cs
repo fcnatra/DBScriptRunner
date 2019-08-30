@@ -12,6 +12,7 @@ namespace DbScriptRunner.Services
     public class AppData<T> where T : INamed, new()
     {
         private const string DEFAULT_CONFIGURATION_NAME = "NewConfiguration.txt";
+        private const byte MAX_LAST_OPENED_FILES = 5;
 
         public ApplicationStatusBackup Status { get; set; }
 
@@ -20,6 +21,9 @@ namespace DbScriptRunner.Services
         public IArrangeableList<INamed> Instances { get; set; }
 
         public bool IsNewConfiguration => Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] == DEFAULT_CONFIGURATION_NAME;
+
+        private List<string> _lastOpenedFiles = new List<string>();
+        public List<string> LastOpenedFiles => _lastOpenedFiles.ToList();
 
         public AppData()
         {
@@ -92,17 +96,40 @@ namespace DbScriptRunner.Services
             return string.IsNullOrEmpty(Persistence.Repository.Name) || string.IsNullOrEmpty(Persistence.Repository.Location);
         }
         
-        public void Load(string locationPath, string locationName)
+        public void Load(string locationPath, string fileName)
         {
-            Persistence.Repository.Name = locationName;
-            Persistence.Repository.Location = locationPath;
-
-            List<INamed> dataForInstances = Persistence.Load().ToList();
+            List<INamed> dataForInstances = Persistence.Load(locationPath, fileName).ToList();
 
             Instances.InitializeWith(dataForInstances);
 
-            Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = locationName;
+            UpdateStatusWithLoadedFileInfo(locationPath, fileName);
+            UpdateLastOpenedFilesList(locationPath, fileName);
+        }
+
+        private void UpdateStatusWithLoadedFileInfo(string locationPath, string fileName)
+        {
+            Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = fileName;
             Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = locationPath;
+        }
+
+        private void UpdateLastOpenedFilesList(string path, string fileName)
+        {
+            var fullFileName = Path.Combine(path, fileName);
+
+            RemoveFileName_FromLastOpenedFiles(fullFileName);
+            _lastOpenedFiles.Insert(0, fullFileName);
+            CutLastOpenedFilesList_ToMatchMaxLimit();
+        }
+
+        private void CutLastOpenedFilesList_ToMatchMaxLimit()
+        {
+            if (_lastOpenedFiles.Count > MAX_LAST_OPENED_FILES)
+                _lastOpenedFiles.RemoveAt(MAX_LAST_OPENED_FILES);
+        }
+
+        private void RemoveFileName_FromLastOpenedFiles(string fullFileName)
+        {
+            if (_lastOpenedFiles.Contains(fullFileName)) _lastOpenedFiles.Remove(fullFileName);
         }
 
         public void Load(string fullFileName)
