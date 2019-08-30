@@ -53,16 +53,16 @@ namespace DbScriptRunner.UI
 
             HighlightListViewHeader(lvDatabases);
 
-            InitializeLastOpenedFiles();
+            UpdateListOfLastOpenedFiles();
         }
 
-        private void InitializeLastOpenedFiles()
+        private void UpdateListOfLastOpenedFiles()
         {
-            InitializeLastOpenedFiles(_databasesAppData, serversToolStripMenuItem, menuServersSeparator);
-            InitializeLastOpenedFiles(_scriptsAppData, scriptsToolStripMenuItem, menuScriptsSeparator);
+            UpdateListOfLastOpenedFiles(_databasesAppData, serversToolStripMenuItem, menuServersSeparator);
+            UpdateListOfLastOpenedFiles(_scriptsAppData, scriptsToolStripMenuItem, menuScriptsSeparator);
         }
 
-        private void InitializeLastOpenedFiles<T>(AppData<T> appData, ToolStripMenuItem menuOption, ToolStripSeparator separator) where T: INamed, new()
+        private void UpdateListOfLastOpenedFiles<T>(AppData<T> appData, ToolStripMenuItem menuOption, ToolStripSeparator separator) where T: INamed, new()
         {
             RemoveItemsBelowSeparator(menuOption, separator);
 
@@ -238,7 +238,11 @@ namespace DbScriptRunner.UI
         {
             var newAppData = appData.CreateNewFromThis();
             bool saved = SaveConfigurationFile(newAppData);
-            if (saved) appData = newAppData;
+            if (saved)
+            {
+                appData.UpdateFrom(newAppData);
+                UpdateListOfLastOpenedFiles();
+            }
         }
 
         private void UnHighlightListViewHeader(ListView unfocusedListView)
@@ -472,7 +476,7 @@ namespace DbScriptRunner.UI
 
             if (!string.IsNullOrEmpty(fullPath))
             {
-                appData.SaveItems(Path.GetFileName(fullPath), Path.GetDirectoryName(fullPath));
+                appData.SaveItems(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath));
                 configurationSaved = true;
             }
 
@@ -492,7 +496,7 @@ namespace DbScriptRunner.UI
         {
             appData.Load(fullPath);
             PopulateListView(appData.Instances, listViewToPopulate);
-            InitializeLastOpenedFiles();
+            UpdateListOfLastOpenedFiles();
         }
 
         private bool CheckConfigurationIsSaved<T>(AppData<T> appData, string appDataContentForMessage) where T: INamed, new()

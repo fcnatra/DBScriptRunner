@@ -141,7 +141,7 @@ namespace DbScriptRunner.Services
             Load(Path.GetDirectoryName(fullFileName), Path.GetFileName(fullFileName));
         }
 
-        public void SaveItems(string locationName, string locationPath)
+        public void SaveItems(string locationPath, string locationName)
         {
             Persistence.Repository.Name = locationName;
             Persistence.Repository.Location = locationPath;
@@ -149,6 +149,7 @@ namespace DbScriptRunner.Services
             Persistence.Save();
 
             Instances.InitializeStatus();
+            UpdateLastOpenedFilesList(locationPath, locationName);
         }
 
         public List<string> CheckForErrorsOnName(T InstanceInfo)
@@ -177,7 +178,16 @@ namespace DbScriptRunner.Services
             newAppData.Instances = this.Instances;
             newAppData.Persistence = this.Persistence;
             newAppData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = this.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
+            newAppData.Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles] = this.Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles];
             return newAppData;
+        }
+
+        public void UpdateFrom(AppData<T> appData)
+        {
+            this.Instances = appData.Instances;
+            this.Persistence = appData.Persistence;
+            this.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = appData.Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation];
+            this.Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles] = appData.Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles];
         }
     }
 }

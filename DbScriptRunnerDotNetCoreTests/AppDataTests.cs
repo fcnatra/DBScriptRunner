@@ -75,7 +75,7 @@ namespace DbScriptRunnerTests
 
             dbAppConfigData.Instances = databases;
             dbAppConfigData.Persistence.Repository = fakeRepository;
-            dbAppConfigData.SaveItems(fakeRepository.Name, fakeRepository.Location);
+            dbAppConfigData.SaveItems(fakeRepository.Location, fakeRepository.Name);
             dbAppConfigData.BackupCurrentStatus();
 
             A.CallTo(() => fakeRepository.Load()).Returns(repositoryContent);
