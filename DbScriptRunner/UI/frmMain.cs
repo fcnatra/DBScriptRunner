@@ -5,6 +5,7 @@ using DbScriptRunnerLogic.Interfaces;
 using DbScriptRunnerLogic.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -56,12 +57,6 @@ namespace DbScriptRunner.UI
             UpdateListOfLastOpenedFiles();
         }
 
-        private void UpdateListOfLastOpenedFiles()
-        {
-            UpdateListOfLastOpenedFiles(_databasesAppData, serversToolStripMenuItem, menuServersSeparator);
-            UpdateListOfLastOpenedFiles(_scriptsAppData, scriptsToolStripMenuItem, menuScriptsSeparator);
-        }
-
         private void UpdateListOfLastOpenedFiles<T>(AppData<T> appData, ToolStripMenuItem menuOption, ToolStripSeparator separator) where T: INamed, new()
         {
             RemoveItemsBelowSeparator(menuOption, separator);
@@ -73,12 +68,6 @@ namespace DbScriptRunner.UI
                 menuItem.Click += (sender, e) => { LastOpenedFiles_Click(menuItem, appData); };
                 menuOption.DropDownItems.Add(menuItem);
             }
-        }
-
-        private void LastOpenedFiles_Click<T>(ToolStripMenuItem menuItem, AppData<T> appData) where T: INamed, new()
-        {
-            var listView = (appData is AppData<Script>) ? lvScripts : lvDatabases;
-            OpenConfigurationFile(appData, listView, menuItem.Text);
         }
 
         private void RemoveItemsBelowSeparator(ToolStripMenuItem menuOption, ToolStripSeparator separator)
@@ -103,6 +92,23 @@ namespace DbScriptRunner.UI
             lvDatabases.Columns.Add(new ColumnHeader { DisplayIndex = 1, Width = 300, Text = "Name", Name = "lvDatabasesHeaderName" });
             lvDatabases.Columns[0].TextAlign = HorizontalAlignment.Center;
             lvDatabases.View = View.Details;
+        }
+
+        private void LastOpenedFiles_Click<T>(ToolStripMenuItem menuItem, AppData<T> appData) where T : INamed, new()
+        {
+            var listView = (appData is AppData<Script>) ? lvScripts : lvDatabases;
+            var fileOpened = OpenConfigurationFile(appData, listView, menuItem.Text);
+            if (!fileOpened)
+                RemoveFileFromLastOpenedFiles(menuItem.Text, appData);
+        }
+
+        private void RemoveFileFromLastOpenedFiles<T>(string fullFileName, AppData<T> appData) where T : INamed, new()
+        {
+            if (DialogResult.No == CommonDialogs.AreYouSure($"Remove file from the list?\n{fullFileName}"))
+                return;
+
+            appData.RemoveFileNameFromLastOpenedFiles(fullFileName);
+            UpdateListOfLastOpenedFiles();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -470,7 +476,7 @@ namespace DbScriptRunner.UI
             else
             {
                 fullPath = Path.Combine(dbLocation, fileName);
-                if (askForConfirmation && CommonDialogs.AreYouSure("SAVE FILE") == DialogResult.No)
+                if (askForConfirmation && CommonDialogs.AreYouSure($"Save file?\n{fullPath}") == DialogResult.No)
                     fullPath = string.Empty;
             }
 
@@ -492,11 +498,23 @@ namespace DbScriptRunner.UI
                 OpenConfigurationFile(appData, listViewToPopulate, fullPath);
         }
 
-        private void OpenConfigurationFile<T>(AppData<T> appData, ListView listViewToPopulate, string fullPath) where T : INamed, new()
+        private bool OpenConfigurationFile<T>(AppData<T> appData, ListView listViewToPopulate, string fullPath) where T : INamed, new()
         {
-            appData.Load(fullPath);
-            PopulateListView(appData.Instances, listViewToPopulate);
-            UpdateListOfLastOpenedFiles();
+            var fileOpened = true;
+            try
+            {
+                appData.Load(fullPath);
+                PopulateListView(appData.Instances, listViewToPopulate);
+                UpdateListOfLastOpenedFiles();
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+                CommonDialogs.TellUserFileCouldNotBeOpened(fullPath);
+                fileOpened = false;
+            }
+
+            return fileOpened;
         }
 
         private bool CheckConfigurationIsSaved<T>(AppData<T> appData, string appDataContentForMessage) where T: INamed, new()
@@ -518,6 +536,12 @@ namespace DbScriptRunner.UI
 
             appData.BackupCurrentStatus();
             return operationResult;
+        }
+
+        private void UpdateListOfLastOpenedFiles()
+        {
+            UpdateListOfLastOpenedFiles(_databasesAppData, serversToolStripMenuItem, menuServersSeparator);
+            UpdateListOfLastOpenedFiles(_scriptsAppData, scriptsToolStripMenuItem, menuScriptsSeparator);
         }
     }
 }

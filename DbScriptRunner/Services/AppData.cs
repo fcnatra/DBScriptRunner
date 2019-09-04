@@ -22,7 +22,19 @@ namespace DbScriptRunner.Services
 
         public bool IsNewConfiguration => Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] == DEFAULT_CONFIGURATION_NAME;
 
-        public List<string> LastOpenedFiles => Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        public List<string> LastOpenedFiles
+        {
+            get
+            {
+                return Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles]
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+            }
+            private set
+            {
+                Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles] = string.Join(",", value);
+            }
+        }
 
         public AppData()
         {
@@ -109,21 +121,19 @@ namespace DbScriptRunner.Services
             Status[ApplicationStatusBackup.StatusItem.ConfigurationFileName] = fileName;
             Status[ApplicationStatusBackup.StatusItem.ConfigurationFileLocation] = locationPath;
 
-            UpdateLastOpenedFilesList(locationPath, fileName);
+            AddLastOpenedFile(locationPath, fileName);
         }
 
-        private void UpdateLastOpenedFilesList(string path, string fileName)
+        private void AddLastOpenedFile(string path, string fileName)
         {
             var fullFileName = Path.Combine(path, fileName);
+
+            RemoveFileNameFromLastOpenedFiles(fullFileName);
+
             var lastOpenedFiles = LastOpenedFiles;
-
-            RemoveFileNameFromLastOpenedFiles(fullFileName, lastOpenedFiles);
-
             lastOpenedFiles.Insert(0, fullFileName);
-
             CutLastOpenedFilesToMatchMaxLimit(lastOpenedFiles);
-
-            Status[ApplicationStatusBackup.StatusItem.LastOpenedFiles] = string.Join(",", lastOpenedFiles);
+            LastOpenedFiles = lastOpenedFiles;
         }
 
         private static void CutLastOpenedFilesToMatchMaxLimit(List<string> lastOpenedFiles)
@@ -131,9 +141,14 @@ namespace DbScriptRunner.Services
             if (lastOpenedFiles.Count > MAX_LAST_OPENED_FILES) lastOpenedFiles.RemoveAt(MAX_LAST_OPENED_FILES);
         }
 
-        private static void RemoveFileNameFromLastOpenedFiles(string fullFileName, List<string> lastOpenedFiles)
+        public void RemoveFileNameFromLastOpenedFiles(string fullFileName)
         {
-            if (lastOpenedFiles.Contains(fullFileName)) lastOpenedFiles.Remove(fullFileName);
+            List<string> lastOpenedFiles = LastOpenedFiles;
+            if (lastOpenedFiles.Contains(fullFileName))
+            {
+                lastOpenedFiles.Remove(fullFileName);
+                LastOpenedFiles = lastOpenedFiles;
+            }
         }
 
         public void Load(string fullFileName)
@@ -149,7 +164,7 @@ namespace DbScriptRunner.Services
             Persistence.Save();
 
             Instances.InitializeStatus();
-            UpdateLastOpenedFilesList(locationPath, locationName);
+            AddLastOpenedFile(locationPath, locationName);
         }
 
         public List<string> CheckForErrorsOnName(T InstanceInfo)

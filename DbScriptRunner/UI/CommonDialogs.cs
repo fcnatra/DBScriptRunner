@@ -5,22 +5,22 @@ namespace DbScriptRunner.UI
 {
     public class CommonDialogs
     {
-        public static string SelectFileDialogBox(string defaultFileName, string initialDirectory = "")
+        internal static string SelectFileDialogBox(string defaultFileName, string initialDirectory = "")
         {
             return ShowFileDialog(new OpenFileDialog(), defaultFileName, initialDirectory);
         }
 
-        public static string SaveToFileDialogBox(string defaultFileName, string initialDirectory = "")
+        internal static string SaveToFileDialogBox(string defaultFileName, string initialDirectory = "")
         {
             return ShowFileDialog(new SaveFileDialog(), defaultFileName, initialDirectory);
         }
 
-        public static DialogResult AreYouSure(string dialogTitle = "PLEASE CONFIRM")
+        internal static DialogResult AreYouSure(string message = "Are you sure?", string dialogTitle = "PLEASE CONFIRM")
         {
-            return MessageBox.Show("Are you sure?", dialogTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            return MessageBox.Show(message, dialogTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
 
-        private static string ShowFileDialog(FileDialog fileDialog, string defaultFileName, string initialDirectory)
+        internal static string ShowFileDialog(FileDialog fileDialog, string defaultFileName, string initialDirectory)
         {
             string fullPath = null;
 
@@ -36,9 +36,14 @@ namespace DbScriptRunner.UI
             return fullPath;
         }
 
-        public static void TellUserToSelectItemsInOrderToMove()
+        internal static void TellUserToSelectItemsInOrderToMove()
         {
             MessageBox.Show("Select items from the list in order to operate with them", "INFORMATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        internal static void TellUserFileCouldNotBeOpened(string fileName)
+        {
+            MessageBox.Show($"File could not be opened\n{fileName}", "INFORMATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         internal static void TellUserToSelectJustOneItem()
