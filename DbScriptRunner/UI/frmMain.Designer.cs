@@ -40,16 +40,20 @@
             this.serversToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSaveServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveServersConfigurationAs = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCreateNewServersConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.addServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editSelectedServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuServersSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.scriptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSaveScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveScriptConfigurationAs = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCreateNewScriptConfiguration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLoadScript = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRunScriptsSequentially = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRunScriptsParallel = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuScriptsSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.lvDatabases = new System.Windows.Forms.ListView();
             this.toolbar = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonMoveUp = new System.Windows.Forms.ToolStripButton();
@@ -60,10 +64,6 @@
             this.lblDatabasesTitle = new System.Windows.Forms.Label();
             this.lblScriptsTitle = new System.Windows.Forms.Label();
             this.lvScripts = new System.Windows.Forms.ListView();
-            this.menuSaveServersConfigurationAs = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuSaveScriptConfigurationAs = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuScriptsSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.menuServersSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -172,6 +172,13 @@
             this.menuSaveServersConfiguration.Text = "&Save Configuration";
             this.menuSaveServersConfiguration.Click += new System.EventHandler(this.menuSaveServersConfiguration_Click);
             // 
+            // menuSaveServersConfigurationAs
+            // 
+            this.menuSaveServersConfigurationAs.Name = "menuSaveServersConfigurationAs";
+            this.menuSaveServersConfigurationAs.Size = new System.Drawing.Size(212, 22);
+            this.menuSaveServersConfigurationAs.Text = "Sa&ve Configuration As...";
+            this.menuSaveServersConfigurationAs.Click += new System.EventHandler(this.menuSaveServersConfigurationAs_Click);
+            // 
             // menuCreateNewServersConfiguration
             // 
             this.menuCreateNewServersConfiguration.Name = "menuCreateNewServersConfiguration";
@@ -192,6 +199,11 @@
             this.editSelectedServerToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.editSelectedServerToolStripMenuItem.Text = "&Edit Selected Database";
             this.editSelectedServerToolStripMenuItem.Click += new System.EventHandler(this.editSelectedServerToolStripMenuItem_Click);
+            // 
+            // menuServersSeparator
+            // 
+            this.menuServersSeparator.Name = "menuServersSeparator";
+            this.menuServersSeparator.Size = new System.Drawing.Size(209, 6);
             // 
             // scriptsToolStripMenuItem
             // 
@@ -222,6 +234,13 @@
             this.menuSaveScriptConfiguration.Text = "&Save Configuration";
             this.menuSaveScriptConfiguration.Click += new System.EventHandler(this.menuSaveScriptConfiguration_Click);
             // 
+            // menuSaveScriptConfigurationAs
+            // 
+            this.menuSaveScriptConfigurationAs.Name = "menuSaveScriptConfigurationAs";
+            this.menuSaveScriptConfigurationAs.Size = new System.Drawing.Size(309, 22);
+            this.menuSaveScriptConfigurationAs.Text = "Sa&ve Configuration As...";
+            this.menuSaveScriptConfigurationAs.Click += new System.EventHandler(this.menuSaveScriptConfigurationAs_Click);
+            // 
             // menuCreateNewScriptConfiguration
             // 
             this.menuCreateNewScriptConfiguration.Name = "menuCreateNewScriptConfiguration";
@@ -248,6 +267,11 @@
             this.menuRunScriptsParallel.Name = "menuRunScriptsParallel";
             this.menuRunScriptsParallel.Size = new System.Drawing.Size(309, 22);
             this.menuRunScriptsParallel.Text = "Run selected scripts on servers - &PARALLEL";
+            // 
+            // menuScriptsSeparator
+            // 
+            this.menuScriptsSeparator.Name = "menuScriptsSeparator";
+            this.menuScriptsSeparator.Size = new System.Drawing.Size(306, 6);
             // 
             // lvDatabases
             // 
@@ -328,6 +352,7 @@
             // 
             // lblDatabasesTitle
             // 
+            this.lblDatabasesTitle.AutoEllipsis = true;
             this.lblDatabasesTitle.BackColor = System.Drawing.SystemColors.ControlLight;
             this.lblDatabasesTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblDatabasesTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -335,6 +360,7 @@
             this.lblDatabasesTitle.Name = "lblDatabasesTitle";
             this.lblDatabasesTitle.Size = new System.Drawing.Size(317, 22);
             this.lblDatabasesTitle.TabIndex = 8;
+            this.lblDatabasesTitle.Tag = "";
             this.lblDatabasesTitle.Text = "DATABASES";
             this.lblDatabasesTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -349,6 +375,7 @@
             this.lblScriptsTitle.Name = "lblScriptsTitle";
             this.lblScriptsTitle.Size = new System.Drawing.Size(458, 22);
             this.lblScriptsTitle.TabIndex = 10;
+            this.lblScriptsTitle.Tag = "";
             this.lblScriptsTitle.Text = "SCRIPTS";
             this.lblScriptsTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -366,30 +393,6 @@
             this.lvScripts.UseCompatibleStateImageBehavior = false;
             this.lvScripts.Enter += new System.EventHandler(this.listViewConfiguration_Enter);
             this.lvScripts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViews_KeyDown);
-            // 
-            // menuSaveServersConfigurationAs
-            // 
-            this.menuSaveServersConfigurationAs.Name = "menuSaveServersConfigurationAs";
-            this.menuSaveServersConfigurationAs.Size = new System.Drawing.Size(212, 22);
-            this.menuSaveServersConfigurationAs.Text = "Sa&ve Configuration As...";
-            this.menuSaveServersConfigurationAs.Click += new System.EventHandler(this.menuSaveServersConfigurationAs_Click);
-            // 
-            // menuSaveScriptConfigurationAs
-            // 
-            this.menuSaveScriptConfigurationAs.Name = "menuSaveScriptConfigurationAs";
-            this.menuSaveScriptConfigurationAs.Size = new System.Drawing.Size(309, 22);
-            this.menuSaveScriptConfigurationAs.Text = "Sa&ve Configuration As...";
-            this.menuSaveScriptConfigurationAs.Click += new System.EventHandler(this.menuSaveScriptConfigurationAs_Click);
-            // 
-            // menuScriptsSeparator
-            // 
-            this.menuScriptsSeparator.Name = "menuScriptsSeparator";
-            this.menuScriptsSeparator.Size = new System.Drawing.Size(306, 6);
-            // 
-            // menuServersSeparator
-            // 
-            this.menuServersSeparator.Name = "menuServersSeparator";
-            this.menuServersSeparator.Size = new System.Drawing.Size(209, 6);
             // 
             // frmMain
             // 

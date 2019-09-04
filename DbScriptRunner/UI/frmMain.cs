@@ -48,26 +48,15 @@ namespace DbScriptRunner.UI
         {
             InitializeUIForDatabasesListView();
             PopulateListView(_databasesAppData.Instances, lvDatabases, null);
+            UpdateConfigFileListHeader(_databasesAppData);
 
             InitializeUIForScriptsListView();
             PopulateListView(_scriptsAppData.Instances, lvScripts, null);
+            UpdateConfigFileListHeader(_scriptsAppData);
 
             HighlightListViewHeader(lvDatabases);
 
             UpdateListOfLastOpenedFiles();
-        }
-
-        private void UpdateListOfLastOpenedFiles<T>(AppData<T> appData, ToolStripMenuItem menuOption, ToolStripSeparator separator) where T: INamed, new()
-        {
-            RemoveItemsBelowSeparator(menuOption, separator);
-
-            foreach (var fullFileName in appData.LastOpenedFiles)
-            {
-                var menuItem = new ToolStripMenuItem();
-                menuItem.Text = fullFileName;
-                menuItem.Click += (sender, e) => { LastOpenedFiles_Click(menuItem, appData); };
-                menuOption.DropDownItems.Add(menuItem);
-            }
         }
 
         private void RemoveItemsBelowSeparator(ToolStripMenuItem menuOption, ToolStripSeparator separator)
@@ -506,8 +495,9 @@ namespace DbScriptRunner.UI
                 appData.Load(fullPath);
                 PopulateListView(appData.Instances, listViewToPopulate);
                 UpdateListOfLastOpenedFiles();
+                UpdateConfigFileListHeader(appData);
             }
-            catch (Exception ex)
+            catch (FileNotFoundException ex)
             {
                 Trace.WriteLine(ex);
                 CommonDialogs.TellUserFileCouldNotBeOpened(fullPath);
@@ -515,6 +505,15 @@ namespace DbScriptRunner.UI
             }
 
             return fileOpened;
+        }
+
+        private void UpdateConfigFileListHeader<T>(AppData<T> appData) where T : INamed, new()
+        {
+            
+            Label listViewHeader = (appData.Equals(_scriptsAppData)) ? lblScriptsTitle : lblDatabasesTitle;
+            listViewHeader.Text = listViewHeader.Text.Split(new char[] { ' ' })[0]
+                + " ...\\"
+                + Path.GetFileName(appData.LastOpenedFiles[0]);
         }
 
         private bool CheckConfigurationIsSaved<T>(AppData<T> appData, string appDataContentForMessage) where T: INamed, new()
@@ -542,6 +541,19 @@ namespace DbScriptRunner.UI
         {
             UpdateListOfLastOpenedFiles(_databasesAppData, serversToolStripMenuItem, menuServersSeparator);
             UpdateListOfLastOpenedFiles(_scriptsAppData, scriptsToolStripMenuItem, menuScriptsSeparator);
+        }
+
+        private void UpdateListOfLastOpenedFiles<T>(AppData<T> appData, ToolStripMenuItem menuOption, ToolStripSeparator separator) where T : INamed, new()
+        {
+            RemoveItemsBelowSeparator(menuOption, separator);
+
+            foreach (var fullFileName in appData.LastOpenedFiles)
+            {
+                var menuItem = new ToolStripMenuItem();
+                menuItem.Text = fullFileName;
+                menuItem.Click += (sender, e) => { LastOpenedFiles_Click(menuItem, appData); };
+                menuOption.DropDownItems.Add(menuItem);
+            }
         }
     }
 }
